@@ -49,7 +49,3 @@ class TestSql(TestSqlObjectBase):
 
     def test_sql_connection(self):
         self.assertIsNotNone(self._connection)
-
-    def test_sql_object(self):
-        """Write an SQL object to the db and read it back"""
-        self.sql_object_creation_test()
