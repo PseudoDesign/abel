@@ -1,5 +1,5 @@
 import unittest
-from ..Sql import SqlConnection, SqlObject, SqlBase, SqlSession
+from ..Sql import SqlConnection, SqlObject
 
 
 class TestSqlObjectBase(unittest.TestCase):
