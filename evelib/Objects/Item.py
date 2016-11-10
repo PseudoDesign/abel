@@ -1,5 +1,5 @@
-from ..Sql import SqlObject
 from sqlalchemy import String, Column
+from ..Sql import SqlObject
 
 
 class Item(SqlObject):
