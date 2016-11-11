@@ -17,7 +17,7 @@ class TestSqlObjectBase(unittest.TestCase):
         """tests format: {test_method : [kwargs, dict(name='derp')]}"""
         for test in self.TESTS.keys():
             for kwargs in self.TESTS[test]:
-                test(self.TEST_OBJECT, kwargs)
+                test(self, **kwargs)
 
     def test_table_creation(self):
         """Verify our tablename exists in the database"""
@@ -44,7 +44,7 @@ class TestSqlObjectBase(unittest.TestCase):
 class TestSql(TestSqlObjectBase):
     TEST_OBJECT = SqlTestObject
     TESTS = {
-        TestSqlObjectBase.sql_object_creation_test: []
+        TestSqlObjectBase.sql_object_creation_test: [dict()]
     }
 
     def test_sql_connection(self):
