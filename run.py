@@ -1,4 +1,5 @@
 import evelib
+from evelib.Objects.Item import Item
 
 
 def getByAttrVal(objlist, attr, val):

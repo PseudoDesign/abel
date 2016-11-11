@@ -1,8 +1,9 @@
-from sqlalchemy import String, Column
-from ..Sql import SqlObject
+from sqlalchemy import String, Column, Integer
+from ..Sql import SqlBase
 
 
-class Item(SqlObject):
+class Item(SqlBase):
     __tablename__ = "item"
 
+    id = Column(Integer, primary_key=True)
     name = Column(String)
