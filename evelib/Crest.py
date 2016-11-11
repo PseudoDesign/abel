@@ -16,13 +16,15 @@ class CrestConnection(pycrest.EVE):
         return retval
 
 
-class CrestObjectInterface:
+class CrestObjectHelper:
+    @staticmethod
     def get_by_attr_value(objlist, attr, val):
         """ Searches list of dicts for a dict with dict[attr] == val """
         matches = [getattr(obj, attr) == val for obj in objlist]
         index = matches.index(True)  # find first match, raise ValueError if not found
         return objlist[index]
 
+    @staticmethod
     def get_all_items(page):
         ret = page().items
         while hasattr(page, 'next'):
