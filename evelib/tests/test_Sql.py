@@ -1,5 +1,5 @@
 import unittest
-from ..Sql import SqlConnection, SqlObject, Item
+from evelib.Sql import SqlConnection, SqlTestObject
 
 
 class TestSqlObjectBase(unittest.TestCase):
@@ -42,7 +42,7 @@ class TestSqlObjectBase(unittest.TestCase):
 
 
 class TestSql(TestSqlObjectBase):
-    TEST_OBJECT = SqlObject
+    TEST_OBJECT = SqlTestObject
     TESTS = {
         TestSqlObjectBase.sql_object_creation_test: []
     }

@@ -1,5 +1,5 @@
 import unittest
-from ..Crest import CrestConnection
+from evelib.Crest import CrestConnection
 
 
 class TestCrestConnection(unittest.TestCase):

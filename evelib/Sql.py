@@ -19,11 +19,7 @@ class SqlConnection:
         return self.engine.table_names()
 
 
-class SqlObject(SqlBase):
-    __tablename__ = 'undefined'
-
-    id = Column(Integer, primary_key=True)
-
+class SqlObjectInterface:
     def write_to_db(self):
         session = SqlSession()
         session.add(self)
@@ -33,3 +29,9 @@ class SqlObject(SqlBase):
     def get_from_db_by_id(cls, my_id):
         session = SqlSession()
         return session.query(cls).filter_by(id=my_id).first()
+
+
+class SqlTestObject(SqlBase, SqlObjectInterface):
+    __tablename__ = 'undefined'
+
+    id = Column(Integer, primary_key=True)
