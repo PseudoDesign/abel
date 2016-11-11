@@ -25,7 +25,6 @@ class SqlObject(SqlBase):
     id = Column(Integer, primary_key=True)
 
     def write_to_db(self):
-
         session = SqlSession()
         session.add(self)
         session.commit()
