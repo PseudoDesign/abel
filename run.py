@@ -1,5 +1,4 @@
 import evelib
-from evelib.Objects.Item import Item
 
 
 def getByAttrVal(objlist, attr, val):
@@ -19,6 +18,12 @@ def getAllItems(page):
 
 eve = evelib.CrestConnection()
 print(eve)
+
+for entry in eve.get_all_items():
+    e = entry()
+    if e.published:
+        print(e)
+
 
 region = getByAttrVal(eve.regions().items, 'name', 'The Forge')
 item = getByAttrVal(getAllItems(eve.itemTypes), 'name', 'Tritanium')

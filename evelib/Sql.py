@@ -7,7 +7,7 @@ SqlSession = sessionmaker()
 
 
 class SqlConnection:
-    def __init__(self,db='sqlite:///:memory:', echo=False):
+    def __init__(self,db='sqlite:///:memory:',echo=False):
         self.engine = create_engine(db,echo=echo)
         SqlBase.metadata.bind = self.engine
         SqlSession.configure(bind=self.engine)
@@ -30,6 +30,12 @@ class SqlObjectInterface:
         session = SqlSession()
         return session.query(cls).filter_by(id=my_id).first()
 
+    @classmethod
+    def new_object_from_simple_crest(cls, crest):
+        columns = dict()
+        for column in cls.__table__.columns.keys():
+            columns[column] = getattr(crest, column)
+        return cls(**columns)
 
 class SqlTestObject(SqlBase, SqlObjectInterface):
     __tablename__ = 'undefined'
