@@ -1,5 +1,6 @@
 from evelib.tests.test_Sql import TestSqlObjectBase
-from evelib.Objects.Item import Item
+from evelib.objects.Item import Item
+
 
 class TestItem(TestSqlObjectBase):
     TEST_OBJECT = Item

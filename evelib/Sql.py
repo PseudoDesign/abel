@@ -7,7 +7,7 @@ SqlSession = sessionmaker()
 
 
 class SqlConnection:
-    def __init__(self,db='sqlite:///:memory:',echo=False):
+    def __init__(self,db='sqlite:///:memory:', echo=False):
         self.engine = create_engine(db,echo=echo)
         SqlBase.metadata.bind = self.engine
         SqlSession.configure(bind=self.engine)
