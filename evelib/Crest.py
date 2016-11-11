@@ -14,3 +14,18 @@ class CrestConnection(pycrest.EVE):
             retval += "\t" + key + " : " + self.kwargs[key] + "\n"
         retval += "pycrest.EVE info:\n\t" + super().__str__()
         return retval
+
+
+class CrestObjectInterface:
+    def get_by_attr_value(objlist, attr, val):
+        """ Searches list of dicts for a dict with dict[attr] == val """
+        matches = [getattr(obj, attr) == val for obj in objlist]
+        index = matches.index(True)  # find first match, raise ValueError if not found
+        return objlist[index]
+
+    def get_all_items(page):
+        ret = page().items
+        while hasattr(page, 'next'):
+            page = page().next()
+            ret.extend(page().items)
+        return ret
