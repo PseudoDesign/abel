@@ -25,6 +25,7 @@ class TestItemSql(TestSqlObjectBase):
         db_item.write_to_db()
         TestCrestSqlHelper.compare_db_to_crest(self, db_item, crest_item)
 
+    # TODO: Create a method to pull an entry from CREST if it doesn't exist in the db
 
 class TestItemCrest(TestCrestObjectBase):
     pass
