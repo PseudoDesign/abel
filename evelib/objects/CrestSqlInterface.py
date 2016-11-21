@@ -4,15 +4,11 @@ from evelib.Sql import SqlObjectInterface
 class CrestSqlInterface(SqlObjectInterface):
     @classmethod
     def create_from_crest_data(cls, crest_item, **kwargs):
-        retval = cls.new_object_from_simple_crest(crest_item)
+        new_obj = cls.new_object_from_simple_crest(crest_item)
         if 'write' in kwargs:
             if kwargs['write']:
-                retval.write_to_db()
-        return retval
-
-    @classmethod
-    def get_from_crest_by_id(cls, my_id):
-        raise NotImplementedError()
+                new_obj.write_to_db()
+        return new_obj
 
     @classmethod
     def get_db_item_by_crest_item(cls, crest_item, **kwargs):
