@@ -1,5 +1,4 @@
 from evelib.tests.test_Sql import TestSqlObjectBase
-from evelib.tests.test_Crest import TestCrestObjectBase
 from evelib.Crest import CrestConnection
 from evelib.objects.Item import Item
 from evelib.objects.tests.test_CrestSqlHelper import TestCrestSqlHelper
@@ -17,9 +16,6 @@ class TestItemSql(TestSqlObjectBase):
     @classmethod
     def setUpClass(cls):
         cls.eve = CrestConnection()
-
-    def setUp(self):
-        super().setUp()
 
     def test_add_new_crest_item(self):
         crest_item = self.eve.get_by_attr_value(self.eve.get_entries_in_page(self.eve.itemTypes), 'name', 'Tritanium')()
