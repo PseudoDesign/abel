@@ -57,6 +57,7 @@ class SqlObjectInterface:
             columns[column] = getattr(crest, column)
         return cls(**columns)
 
+
 class SqlTestObject(SqlBase, SqlObjectInterface):
     __tablename__ = 'undefined'
 

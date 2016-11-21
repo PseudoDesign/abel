@@ -17,7 +17,9 @@ class TestItemSql(TestSqlObjectBase):
     @classmethod
     def setUpClass(cls):
         cls.eve = CrestConnection()
-        super().setUpClass()
+
+    def setUp(self):
+        super().setUp()
 
     def test_add_new_crest_item(self):
         crest_item = self.eve.get_by_attr_value(self.eve.get_entries_in_page(self.eve.itemTypes), 'name', 'Tritanium')()
@@ -46,3 +48,4 @@ class TestItemSql(TestSqlObjectBase):
         Item.get_db_item_by_crest_item(crest_item, create_if_null=True, write=True)
         db_item = Item.get_from_db_by_attr('name', TEST_ITEM)
         self.assertEqual(db_item.name, TEST_ITEM)
+

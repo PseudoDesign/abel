@@ -18,3 +18,9 @@ class CrestSqlInterface(SqlObjectInterface):
                 if kwargs['create_if_null']:
                     retval = cls.create_from_crest_data(crest_item(), **kwargs)
         return retval
+
+    @classmethod
+    def is_crest_item_in_db(cls, crest_item):
+        if cls.get_from_db_by_id(crest_item.id) is not None:
+            return True
+        return False
