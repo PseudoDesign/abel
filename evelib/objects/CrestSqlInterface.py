@@ -16,5 +16,5 @@ class CrestSqlInterface(SqlObjectInterface):
         if retval is None:
             if 'create_if_null' in kwargs:
                 if kwargs['create_if_null']:
-                    retval = cls.create_from_crest_data(crest_item, **kwargs)
+                    retval = cls.create_from_crest_data(crest_item(), **kwargs)
         return retval

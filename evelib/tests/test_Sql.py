@@ -8,10 +8,9 @@ class TestSqlObjectBase(unittest.TestCase):
     TEST_OBJECT = None
     _connection = None
 
-    @classmethod
-    def setUpClass(cls):
-        cls._connection = SqlConnection(cls.DB_LOCATION)
-        cls._connection.create_tables()
+    def setUp(self):
+        self._connection = SqlConnection(self.DB_LOCATION)
+        self._connection.create_tables()
 
     def test_run_tests(self):
         """tests format: {test_method : [kwargs, dict(name='derp')]}"""
