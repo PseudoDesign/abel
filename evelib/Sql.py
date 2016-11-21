@@ -26,9 +26,13 @@ class SqlObjectInterface:
         session.commit()
 
     @classmethod
-    def get_from_db_by_id(cls, my_id):
+    def get_from_db_by_attr(cls, attr, key):
         session = SqlSession()
-        return session.query(cls).filter_by(id=my_id).first()
+        return session.query(cls).filter_by(**{attr: key}).first()
+
+    @classmethod
+    def get_from_db_by_id(cls, my_id):
+        return cls.get_from_db_by_attr('id', my_id)
 
     @classmethod
     def new_object_from_simple_crest(cls, crest):
