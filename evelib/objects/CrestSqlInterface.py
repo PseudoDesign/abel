@@ -6,7 +6,8 @@ class CrestSqlInterface(SqlObjectInterface):
     def create_from_crest_data(cls, crest_item, **kwargs):
         retval = cls.new_object_from_simple_crest(crest_item)
         if 'write' in kwargs:
-            retval.write_to_db()
+            if kwargs['write']:
+                retval.write_to_db()
         return retval
 
     @classmethod
@@ -14,5 +15,10 @@ class CrestSqlInterface(SqlObjectInterface):
         raise NotImplementedError()
 
     @classmethod
-    def get_from_db_or_create(cls, my_id, crest_connection):
-        pass
+    def get_db_item_by_crest_item(cls, crest_item, **kwargs):
+        retval = cls.get_from_db_by_id(crest_item.id)
+        if retval is None:
+            if 'create_if_null' in kwargs:
+                if kwargs['create_if_null']:
+                    retval = cls.create_from_crest_data(crest_item, **kwargs)
+        return retval
