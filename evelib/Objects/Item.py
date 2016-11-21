@@ -17,7 +17,3 @@ class Item(SqlBase, CrestSqlInterface):
             return True
         return False
 
-    @classmethod
-    def get_db_item_by_crest_obj(cls, crest_item, **kwargs):
-        pass
-
