@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from threading import Lock
 
 SqlBase = declarative_base()
 SqlSession = sessionmaker()
@@ -8,15 +9,26 @@ SqlSession = sessionmaker()
 
 class SqlConnection:
     def __init__(self,db='sqlite:///:memory:',echo=False):
-        self.engine = create_engine(db,echo=echo)
-        SqlBase.metadata.bind = self.engine
-        SqlSession.configure(bind=self.engine)
+        self.__db = db
+        self.__echo = echo
+        self.__engine = None
+        self.__engine_lock = Lock()
+        self.reset_engine()
+
+    def reset_engine(self):
+        # Can be used to reset an sqlite database in memory.  Useful for testing
+        with self.__engine_lock:
+            self.__engine = create_engine(self.__db, echo=self.__echo)
+            SqlBase.metadata.bind = self.__engine
+            SqlSession.configure(bind=self.__engine)
 
     def create_tables(self):
-        SqlBase.metadata.create_all(self.engine)
+        with self.__engine_lock:
+            SqlBase.metadata.create_all(self.__engine)
 
     def get_tables_in_db(self):
-        return self.engine.table_names()
+        with self.__engine_lock:
+            return self.__engine.table_names()
 
 
 class SqlObjectInterface:
