@@ -39,3 +39,10 @@ class TestItemSql(TestSqlObjectBase):
         self.assertFalse(Item.is_crest_item_in_db(crest_item), "Item is already in database")
         db_item = Item.get_db_item_by_crest_item(crest_item, create_if_null=True, write=True)
         self.assertEqual(db_item.name, Item.get_from_db_by_id(db_item.id).name)
+
+    def test_get_db_item_by_name(self):
+        TEST_ITEM = "Plagioclase"
+        crest_item = self.eve.get_by_attr_value(self.eve.get_entries_in_page(self.eve.itemTypes), 'name', TEST_ITEM)()
+        Item.get_db_item_by_crest_item(crest_item, create_if_null=True, write=True)
+        db_item = Item.get_from_db_by_attr('name', TEST_ITEM)
+        self.assertEqual(db_item.name, TEST_ITEM)
