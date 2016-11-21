@@ -1,4 +1,4 @@
-from sqlalchemy import String, Column, Integer, Boolean, Float
+from sqlalchemy import String, Column, Integer
 from evelib.Sql import SqlBase
 from evelib.objects.CrestSqlInterface import CrestSqlInterface
 
