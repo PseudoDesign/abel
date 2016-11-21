@@ -30,3 +30,4 @@ class CrestConnection(pycrest.EVE):
             ret.extend(page().items)
         return ret
 
+
