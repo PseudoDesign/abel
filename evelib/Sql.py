@@ -26,9 +26,13 @@ class SqlObjectInterface:
         session.commit()
 
     @classmethod
-    def get_from_db_by_attr(cls, attr, key):
+    def get_from_db_by_kwargs(cls, **kwargs):
         session = SqlSession()
-        return session.query(cls).filter_by(**{attr: key}).first()
+        return session.query(cls).filter_by(kwargs).first()
+
+    @classmethod
+    def get_from_db_by_attr(cls, attr, key):
+        return cls.get_from_db_by_kwargs(**{attr: key})
 
     @classmethod
     def get_from_db_by_id(cls, my_id):
