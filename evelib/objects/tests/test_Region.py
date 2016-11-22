@@ -1,7 +1,7 @@
 from evelib.tests.test_Sql import TestSqlObjectBase
 from evelib.Crest import CrestConnection
 from evelib.objects.Region import Region
-from evelib.objects.tests.test_CrestSqlHelper import TestCrestSqlHelper
+from evelib.objects.tests.test_CrestSqlHelper import TestCrestSqlInterface
 
 
 class TestRegion(TestSqlObjectBase):
