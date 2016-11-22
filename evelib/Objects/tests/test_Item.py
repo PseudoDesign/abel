@@ -1,10 +1,9 @@
 from evelib.tests.test_Sql import TestSqlObjectBase
-from evelib.Crest import CrestConnection
 from evelib.objects.Item import Item
-from evelib.objects.tests.test_CrestSqlHelper import TestCrestSqlHelper
+from evelib.objects.tests.test_CrestSqlHelper import TestCrestSqlInterface
 
 
-class TestItemSql(TestSqlObjectBase):
+class TestItemSql(TestSqlObjectBase, TestCrestSqlInterface):
     TEST_OBJECT = Item
     TESTS = {
         TestSqlObjectBase.sql_object_creation_test: [
@@ -13,15 +12,11 @@ class TestItemSql(TestSqlObjectBase):
         ]
     }
 
-    @classmethod
-    def setUpClass(cls):
-        cls.eve = CrestConnection()
-
     def test_add_new_crest_item(self):
         crest_item = self.eve.get_by_attr_value(self.eve.get_entries_in_page(self.eve.itemTypes), 'name', 'Tritanium')()
         db_item = Item.create_from_crest_data(crest_item)
         db_item.write_to_db()
-        TestCrestSqlHelper.compare_db_to_crest(self, db_item, crest_item)
+        self.compare_db_to_crest(db_item, crest_item)
 
     def test_is_crest_object_in_db(self):
         TEST_ITEM = "Pyerite"
