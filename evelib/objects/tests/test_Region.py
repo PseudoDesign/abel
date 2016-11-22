@@ -3,7 +3,7 @@ from evelib.objects.Region import Region
 from evelib.objects.tests.test_CrestSqlHelper import TestCrestSqlInterface
 
 
-class TestRegion(TestSqlObjectBase):
+class TestRegion(TestSqlObjectBase, TestCrestSqlInterface):
     TEST_OBJECT = Region
     TESTS = {
         TestSqlObjectBase.sql_object_creation_test: [
@@ -13,4 +13,6 @@ class TestRegion(TestSqlObjectBase):
         ]
     }
 
-
+    SAMPLE_NAMES = [
+        "The Forge"
+    ]
