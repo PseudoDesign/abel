@@ -24,6 +24,6 @@ region = getByAttrVal(eve.regions().items, 'name', 'The Forge')
 item = getByAttrVal(getAllItems(eve.itemTypes), 'name', 'Tritanium')
 
 const = getByAttrVal(eve.constellations().items, 'name', 'Z6T6-B')
-print(const())
+print(const)
 
 sql = evelib.SqlConnection()
