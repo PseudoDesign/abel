@@ -7,8 +7,8 @@ class TestItemSql(TestSqlObjectBase, TestCrestSqlInterface):
     TEST_OBJECT = Item
     TESTS = {
         TestSqlObjectBase.sql_object_creation_test: [
-            dict(name="TestItem"),
-            dict(name="testItemWithNumb3r5")
+            dict(name="TestItem", published=False, mass=0.42),
+            dict(name="testItemWithNumb3r5", published=True, mass=0.11)
         ]
     }
 

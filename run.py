@@ -22,8 +22,8 @@ print(eve)
 
 region = getByAttrVal(eve.regions().items, 'name', 'The Forge')
 item = getByAttrVal(getAllItems(eve.itemTypes), 'name', 'Tritanium')
-print(region.href)
-print(item)
-print(getAllItems(region().marketSellOrders(type=item.href)))
+
+const = getByAttrVal(eve.constellations().items, 'name', 'Z6T6-B')
+print(const())
 
 sql = evelib.SqlConnection()
