@@ -7,7 +7,7 @@ class Region(SqlBase, CrestSqlInterface):
     __tablename__ = "region"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String)
+    name = Column(String, nullable=False)
     description = Column(String)
 
     @classmethod
