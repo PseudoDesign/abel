@@ -24,3 +24,13 @@ class CrestSqlInterface(SqlObjectInterface):
         if cls.get_from_db_by_id(crest_item.id) is not None:
             return True
         return False
+
+    @classmethod
+    def get_objects_from_crest(cls, crest_connection):
+        raise NotImplementedError()
+
+    @classmethod
+    def get_crest_item_by_attr(cls, crest_connection, attr, value):
+        crest_item = crest_connection.get_by_attr_value(
+            crest_connection.get_entries_in_page(cls.get_objects_from_crest(crest_connection)), attr, value)()
+        return crest_item
