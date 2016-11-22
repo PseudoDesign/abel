@@ -12,3 +12,10 @@ class TestItemSql(TestSqlObjectBase, TestCrestSqlInterface):
         ]
     }
 
+    SAMPLE_NAMES = [
+        "Plagioclase",
+        "Veldspar",
+        "Pyerite",
+        "Tritanium"
+    ]
+
