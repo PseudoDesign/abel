@@ -10,3 +10,7 @@ class Item(SqlBase, CrestSqlInterface):
     name = Column(String)
     published = Column(Boolean)
     mass = Float()
+
+    @classmethod
+    def get_objects_from_crest(cls, crest_connection):
+        return crest_connection.itemTypes
