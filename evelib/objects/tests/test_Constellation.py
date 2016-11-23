@@ -18,4 +18,3 @@ class TestConstellation(TestSqlObjectBase, TestCrestSqlInterface):
         region = Region.get_from_db_by_id(db_item.region_id)
         self.assertEqual(region.id, db_item.region_id)
         self.assertEqual(region.name, db_item.r_region.name)
-        self.assertEqual(region.name, db_item.r_region.name)
