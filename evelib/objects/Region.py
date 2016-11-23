@@ -1,6 +1,7 @@
 from sqlalchemy import String, Column, Integer
 from evelib.Sql import SqlBase
 from evelib.objects.CrestSqlInterface import CrestSqlInterface
+from sqlalchemy.orm import relationship
 
 
 class Region(SqlBase, CrestSqlInterface):
@@ -9,6 +10,7 @@ class Region(SqlBase, CrestSqlInterface):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     description = Column(String)
+    r_constellations = relationship("Constellation")
 
     @classmethod
     def get_objects_from_crest(cls, crest_connection):

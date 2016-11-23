@@ -54,7 +54,8 @@ class SqlObjectInterface:
     def new_object_from_simple_crest(cls, crest):
         columns = dict()
         for column in cls.__table__.columns.keys():
-            columns[column] = getattr(crest, column)
+            if hasattr(crest, column):
+                columns[column] = getattr(crest, column)
         return cls(**columns)
 
 

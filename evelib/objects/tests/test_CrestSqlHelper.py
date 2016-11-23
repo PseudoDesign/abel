@@ -16,7 +16,8 @@ class TestCrestSqlInterface(unittest.TestCase):
 
     def compare_db_to_crest(self, db, crest):
         for column in db.__table__.columns.keys():
-            self.assertEqual(getattr(db, column), getattr(crest, column))
+            if hasattr(crest, column):
+                self.assertEqual(getattr(db, column), getattr(crest, column))
 
     def test_add_new_crest_item(self):
         if self.TEST_OBJECT is not None:

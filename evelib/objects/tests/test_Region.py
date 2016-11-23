@@ -16,3 +16,10 @@ class TestRegion(TestSqlObjectBase, TestCrestSqlInterface):
     SAMPLE_NAMES = [
         "The Forge"
     ]
+
+    def test_get_constellations(self):
+        TEST_ITEM = self.get_sample_object_name()
+        crest_item = self.TEST_OBJECT.get_crest_item_by_attr(self.eve, "name", TEST_ITEM)
+        region = self.TEST_OBJECT.get_db_item_by_crest_item(crest_item, create_if_null=True, write=True)
+        constellations = region.r_constellations
+        self.assertFalse(False, str(constellations))
