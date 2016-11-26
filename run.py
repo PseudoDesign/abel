@@ -26,6 +26,6 @@ item = getByAttrVal(getAllItems(eve.itemTypes), 'name', 'Tritanium')
 const = getByAttrVal(eve.constellations().items, 'name', 'Z6T6-B')
 print(const)
 
-const
+print(eve.systems())
 
 sql = evelib.SqlConnection()

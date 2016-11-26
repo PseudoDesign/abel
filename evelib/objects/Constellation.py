@@ -10,6 +10,9 @@ class Constellation(SqlBase, CrestSqlInterface):
 
     id = Column(Integer, primary_key=True)
     name = Column(String)
+
+    r_solar_systems = relationship("SolarSystem")
+
     region_id = Column(Integer, ForeignKey('region.id'), nullable=False)
     r_region = relationship("Region", back_populates="r_constellations")
 
@@ -22,7 +25,6 @@ class Constellation(SqlBase, CrestSqlInterface):
             if kwargs['write']:
                 new_obj.write_to_db()
         return new_obj
-
 
     @classmethod
     def get_objects_from_crest(cls, crest_connection):
