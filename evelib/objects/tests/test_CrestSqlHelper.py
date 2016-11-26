@@ -61,4 +61,3 @@ class TestCrestSqlInterface(unittest.TestCase):
             from_db = self.TEST_OBJECT.get_from_db_or_crest_by_id(self.eve, new_id)
             self.assertEqual(from_db.name, TEST_ITEM)
 
-der
