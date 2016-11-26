@@ -9,10 +9,12 @@ class SolarSystem(SqlBase, CrestSqlInterface):
     __tablename__ = "solar_system"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String)
+    name = Column(String, nullable=False)
 
     constellation_id = Column(Integer, ForeignKey('constellation.id'), nullable=False)
     r_constellation = relationship("Constellation")
+
+    r_stations = relationship("Station")
 
     @classmethod
     def get_objects_from_crest(cls, crest_connection):

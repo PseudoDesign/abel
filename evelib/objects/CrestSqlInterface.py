@@ -34,3 +34,11 @@ class CrestSqlInterface(SqlObjectInterface):
         crest_item = crest_connection.get_by_attr_value(
             crest_connection.get_entries_in_page(cls.get_objects_from_crest(crest_connection)), attr, value)()
         return crest_item
+
+    @classmethod
+    def get_from_db_or_crest_by_id(cls, crest_connection, id):
+        retval = cls.get_from_db_by_id(id)
+        if retval is None:
+            item = cls.get_crest_item_by_attr(crest_connection, 'id', id)
+            retval = cls.create_from_crest_data(item, write=True)
+        return retval
