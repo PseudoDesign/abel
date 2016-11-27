@@ -8,6 +8,7 @@ class CrestSqlInterface(SqlObjectInterface):
         if 'write' in kwargs:
             if kwargs['write']:
                 new_obj.write_to_db()
+                new_obj = cls.get_db_item_by_crest_item(crest_item)
         return new_obj
 
     @classmethod
@@ -30,9 +31,12 @@ class CrestSqlInterface(SqlObjectInterface):
         raise NotImplementedError()
 
     @classmethod
-    def get_crest_item_by_attr(cls, crest_connection, attr, value):
+    def get_crest_item_by_attr(cls, crest_connection, attr, value, object_kwargs={}, **kwargs):
         crest_item = crest_connection.get_by_attr_value(
-            crest_connection.get_entries_in_page(cls.get_objects_from_crest(crest_connection)), attr, value)()
+            crest_connection.get_entries_in_page(
+                cls.get_objects_from_crest(crest_connection, **object_kwargs)), attr, value)
+        if 'dereference' not in kwargs or kwargs['dereference']:
+                    crest_item = crest_item()
         return crest_item
 
     @classmethod
@@ -40,5 +44,13 @@ class CrestSqlInterface(SqlObjectInterface):
         retval = cls.get_from_db_by_id(id)
         if retval is None:
             item = cls.get_crest_item_by_attr(crest_connection, 'id', id)
+            retval = cls.create_from_crest_data(item, write=True)
+        return retval
+
+    @classmethod
+    def get_from_db_or_crest_by_name(cls, crest_connection, name):
+        retval = cls.get_from_db_by_attr('name', name)
+        if retval is None:
+            item = cls.get_crest_item_by_attr(crest_connection, 'name', name)
             retval = cls.create_from_crest_data(item, write=True)
         return retval

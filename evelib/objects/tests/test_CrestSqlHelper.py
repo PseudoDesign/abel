@@ -61,3 +61,11 @@ class TestCrestSqlInterface(unittest.TestCase):
             from_db = self.TEST_OBJECT.get_from_db_or_crest_by_id(self.eve, new_id)
             self.assertEqual(from_db.name, TEST_ITEM)
 
+    def test_get_from_db_or_crest_by_name(self):
+        if self.TEST_OBJECT is not None:
+            TEST_ITEM = self.get_sample_object_name()
+            from_crest = self.TEST_OBJECT.get_from_db_or_crest_by_name(self.eve, TEST_ITEM)
+            self.assertEqual(from_crest.name, TEST_ITEM)
+            from_db = self.TEST_OBJECT.get_from_db_or_crest_by_name(self.eve, TEST_ITEM)
+            self.assertEqual(from_db.name, TEST_ITEM)
+
