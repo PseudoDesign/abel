@@ -1,7 +1,11 @@
 from evelib.Sql import SqlObjectInterface
+from datetime import datetime
 
 
 class CrestSqlInterface(SqlObjectInterface):
+
+    CREST_TIME_FORMAT = "%Y-%m-%dT00:00:00"
+
     @classmethod
     def create_from_crest_data(cls, crest_item, **kwargs):
         new_obj = cls.new_object_from_crest(crest_item, **kwargs)
@@ -58,3 +62,14 @@ class CrestSqlInterface(SqlObjectInterface):
             item = cls.get_crest_item_by_attr(crest_connection, 'name', name)
             retval = cls.create_from_crest_data(item, write=True)
         return retval
+
+    @classmethod
+    def date_to_string(cls, dt):
+        # "2016-10-21T00:00:00"
+        # Note that the time is always 00:00:00 eve time
+        return dt.strftime(cls.CREST_TIME_FORMAT)
+
+    @classmethod
+    def string_to_datetime(cls, my_string):
+        return datetime.strptime(my_string, cls.CREST_TIME_FORMAT)
+

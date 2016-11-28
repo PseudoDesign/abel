@@ -2,13 +2,10 @@ from sqlalchemy import DateTime, Column, Integer, Float, ForeignKey
 from evelib.Sql import SqlBase
 from sqlalchemy.orm import relationship
 from evelib.objects.CrestSqlInterface import CrestSqlInterface
-from datetime import datetime
 
 
 class MarketDay(SqlBase, CrestSqlInterface):
     __tablename__ = "market_day"
-
-    CREST_TIME_FORMAT = "%Y-%m-%dT00:00:00"
 
     id = Column(Integer, primary_key=True)
 
@@ -62,14 +59,3 @@ class MarketDay(SqlBase, CrestSqlInterface):
         item_crest = kwargs['item'].get_crest_item_by_attr(crest_connection, 'id', kwargs['item'].id, dereference=False)
 
         return region_crest().marketHistory(type=item_crest.href)
-
-    @classmethod
-    def date_to_string(cls, dt):
-        # "2016-10-21T00:00:00"
-        # Note that the time is always 00:00:00 eve time
-        return dt.strftime(cls.CREST_TIME_FORMAT)
-
-    @classmethod
-    def string_to_datetime(cls, my_string):
-        return datetime.strptime(my_string, cls.CREST_TIME_FORMAT)
-
