@@ -18,7 +18,7 @@ class MarketDay(SqlBase, CrestSqlInterface):
     highPrice = Column(Float, nullable=False)
     date = Column(DateTime, nullable=False)
 
-    item_id = Column(Integer, ForeignKey('item.id'))
+    item_id = Column(Integer, ForeignKey('item.id'), nullable=False)
     r_item = relationship("Item")
 
     region_id = Column(Integer, ForeignKey('region.id'), nullable=False)
@@ -43,12 +43,12 @@ class MarketDay(SqlBase, CrestSqlInterface):
         return False
 
     @classmethod
-    def new_object_from_simple_crest(cls, crest, **kwargs):
+    def new_object_from_crest(cls, crest, **kwargs):
         if 'region' not in kwargs or 'item' not in kwargs:
             raise AttributeError()
         date = cls.string_to_datetime(getattr(crest, 'date'))
         setattr(crest, 'date', date)
-        new_obj = super().new_object_from_simple_crest(crest)
+        new_obj = super().new_object_from_crest(crest)
         new_obj.region_id = kwargs['region'].id
         new_obj.item_id = kwargs['item'].id
         return new_obj

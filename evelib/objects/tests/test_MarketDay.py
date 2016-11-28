@@ -36,14 +36,15 @@ class TestMarketDay(TestSqlObjectBase, TestCrestSqlInterface):
         self.assertFalse(MarketDay.is_crest_item_in_db(crest_item, **self.crest_kwargs), "Item is already in database")
         MarketDay.create_from_crest_data(crest_item, write=True, **self.crest_kwargs)
         self.assertTrue(MarketDay.is_crest_item_in_db(crest_item, **self.crest_kwargs), "Item is not in database")
-"""
-    def test_get_entry_or_add_from_crest(self):
-        TEST_ITEM = self.get_sample_object_name()
-        crest_item = MarketDay.get_crest_item_by_attr(self.eve, "name", TEST_ITEM)
-        self.assertFalse(MarketDay.is_crest_item_in_db(crest_item), "Item is already in database")
-        db_item = MarketDay.get_db_item_by_crest_item(crest_item, create_if_null=True, write=True)
-        self.assertEqual(db_item.name, MarketDay.get_from_db_by_id(db_item.id).name)
 
+    def test_get_entry_or_add_from_crest(self):
+        crest_item = MarketDay.get_crest_item_by_attr(
+            self.eve, "date", MarketDay.date_to_string(datetime.now() + timedelta(days=-1)), self.crest_kwargs)
+        self.assertFalse(MarketDay.is_crest_item_in_db(crest_item, **self.crest_kwargs), "Item is already in database")
+        db_item = MarketDay.get_db_item_by_crest_item(crest_item, create_if_null=True, write=True, **self.crest_kwargs)
+        self.assertEqual(db_item.volume, MarketDay.get_from_db_by_id(db_item.id).volume)
+
+"""
     def test_get_db_item_by_name(self):
         TEST_ITEM = self.get_sample_object_name()
         crest_item = MarketDay.get_crest_item_by_attr(self.eve, "name", TEST_ITEM)

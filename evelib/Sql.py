@@ -51,7 +51,7 @@ class SqlObjectInterface:
         return cls.get_from_db_by_attr('id', my_id)
 
     @classmethod
-    def new_object_from_simple_crest(cls, crest, **kwargs):
+    def new_object_from_crest(cls, crest, **kwargs):
         columns = dict()
         for column in cls.__table__.columns.keys():
             if hasattr(crest, column):

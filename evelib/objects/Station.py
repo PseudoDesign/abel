@@ -24,5 +24,5 @@ class Station(SqlBase, SqlObjectInterface):
         return new_obj
 
     @classmethod
-    def new_object_from_simple_crest(cls, *args, **kwargs):
+    def new_object_from_crest(cls, *args, **kwargs):
         raise NotImplementedError()

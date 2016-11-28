@@ -22,7 +22,7 @@ class SolarSystem(SqlBase, CrestSqlInterface):
 
     @classmethod
     def create_from_crest_data(cls, crest_item, **kwargs):
-        new_obj = cls.new_object_from_simple_crest(crest_item)
+        new_obj = cls.new_object_from_crest(crest_item)
         new_obj.constellation_id = Constellation.get_db_item_by_crest_item(
             getattr(crest_item(), 'constellation'), create_if_null=True, write=True).id
         if 'write' in kwargs:
