@@ -44,20 +44,10 @@ class TestMarketDay(TestSqlObjectBase, TestCrestSqlInterface):
         db_item = MarketDay.get_db_item_by_crest_item(crest_item, create_if_null=True, write=True, **self.crest_kwargs)
         self.assertEqual(db_item.volume, MarketDay.get_from_db_by_id(db_item.id).volume)
 
-"""
     def test_get_db_item_by_name(self):
-        TEST_ITEM = self.get_sample_object_name()
-        crest_item = MarketDay.get_crest_item_by_attr(self.eve, "name", TEST_ITEM)
-        MarketDay.get_db_item_by_crest_item(crest_item, create_if_null=True, write=True)
-        db_item = MarketDay.get_from_db_by_attr('name', TEST_ITEM)
-        self.assertEqual(db_item.name, TEST_ITEM)
+        crest_item = MarketDay.get_crest_item_by_attr(
+            self.eve, "date", MarketDay.date_to_string(datetime.now() + timedelta(days=-1)), self.crest_kwargs)
+        MarketDay.get_db_item_by_crest_item(crest_item, create_if_null=True, write=True, **self.crest_kwargs)
+        db_item = MarketDay.get_db_item_by_crest_item(crest_item, create_if_null=True, write=True, **self.crest_kwargs)
+        self.assertEqual(db_item.region_id, self.crest_kwargs['region'].id)
 
-    def test_get_from_db_or_crest_by_id(self):
-        TEST_ITEM = self.get_sample_object_name()
-        crest_item = MarketDay.get_crest_item_by_attr(self.eve, "name", TEST_ITEM)
-        new_id = crest_item.id
-        from_crest = MarketDay.get_from_db_or_crest_by_id(self.eve, new_id)
-        self.assertEqual(from_crest.name, TEST_ITEM)
-        from_db = MarketDay.get_from_db_or_crest_by_id(self.eve, new_id)
-        self.assertEqual(from_db.name, TEST_ITEM)
-"""
