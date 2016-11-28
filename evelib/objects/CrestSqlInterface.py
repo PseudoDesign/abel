@@ -4,16 +4,20 @@ from evelib.Sql import SqlObjectInterface
 class CrestSqlInterface(SqlObjectInterface):
     @classmethod
     def create_from_crest_data(cls, crest_item, **kwargs):
-        new_obj = cls.new_object_from_simple_crest(crest_item)
+        new_obj = cls.new_object_from_simple_crest(crest_item, **kwargs)
         if 'write' in kwargs:
             if kwargs['write']:
                 new_obj.write_to_db()
-                new_obj = cls.get_db_item_by_crest_item(crest_item)
+                new_obj = cls.get_db_item_by_crest_item(crest_item, **kwargs)
         return new_obj
 
     @classmethod
+    def crest_db_query(cls, crest_item, **kwargs):
+        return cls.get_from_db_by_id(crest_item.id)
+
+    @classmethod
     def get_db_item_by_crest_item(cls, crest_item, **kwargs):
-        retval = cls.get_from_db_by_id(crest_item.id)
+        retval = cls.crest_db_query(crest_item, **kwargs)
         if retval is None:
             if 'create_if_null' in kwargs:
                 if kwargs['create_if_null']:
@@ -22,7 +26,7 @@ class CrestSqlInterface(SqlObjectInterface):
 
     @classmethod
     def is_crest_item_in_db(cls, crest_item):
-        if cls.get_from_db_by_id(crest_item.id) is not None:
+        if cls.crest_db_query(crest_item) is not None:
             return True
         return False
 

@@ -21,14 +21,37 @@ class MarketDay(SqlBase, CrestSqlInterface):
     item_id = Column(Integer, ForeignKey('item.id'))
     r_item = relationship("Item")
 
-    region_id = Column(Integer, ForeignKey('region.id'))
+    region_id = Column(Integer, ForeignKey('region.id'), nullable=False)
     r_region = relationship("Region")
 
     @classmethod
-    def new_object_from_simple_crest(cls, crest):
+    def crest_db_query(cls, crest_item, **kwargs):
+        if 'region' not in kwargs or 'item' not in kwargs:
+            raise AttributeError()
+        date = getattr(crest_item, 'date')
+        if type(date) is str:
+            date = cls.string_to_datetime(date)
+        return cls.get_from_db_by_kwargs(
+                item_id=kwargs['item'].id,
+                region_id=kwargs['region'].id,
+                date=date)
+
+    @classmethod
+    def is_crest_item_in_db(cls, crest_item, **kwargs):
+        if cls.crest_db_query(crest_item, **kwargs) is not None:
+            return True
+        return False
+
+    @classmethod
+    def new_object_from_simple_crest(cls, crest, **kwargs):
+        if 'region' not in kwargs or 'item' not in kwargs:
+            raise AttributeError()
         date = cls.string_to_datetime(getattr(crest, 'date'))
         setattr(crest, 'date', date)
-        return super().new_object_from_simple_crest(crest)
+        new_obj = super().new_object_from_simple_crest(crest)
+        new_obj.region_id = kwargs['region'].id
+        new_obj.item_id = kwargs['item'].id
+        return new_obj
 
     @classmethod
     def get_objects_from_crest(cls, crest_connection, **kwargs):
