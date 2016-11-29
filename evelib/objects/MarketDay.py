@@ -7,6 +7,8 @@ from evelib.objects.CrestSqlInterface import CrestSqlInterface
 class MarketDay(SqlBase, CrestSqlInterface):
     __tablename__ = "market_day"
 
+    CREST_TIME_FORMAT = "%Y-%m-%dT00:00:00"
+
     id = Column(Integer, primary_key=True)
 
     volume = Column(Integer, nullable=False)

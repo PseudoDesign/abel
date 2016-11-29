@@ -4,7 +4,7 @@ from datetime import datetime
 
 class CrestSqlInterface(SqlObjectInterface):
 
-    CREST_TIME_FORMAT = "%Y-%m-%dT00:00:00"
+    CREST_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S"
 
     @classmethod
     def create_from_crest_data(cls, crest_item, **kwargs):
