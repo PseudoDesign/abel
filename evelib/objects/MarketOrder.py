@@ -8,6 +8,7 @@ from sqlalchemy.dialects import sqlite
 class MarketOrder(SqlBase, CrestSqlInterface):
     __tablename__ = "market_order"
 
+    # sqlite doesn't support BigInteger auto-increment primary keys.  Map it to Integer, just for testing
     BigInt = BigInteger().with_variant(sqlite.INTEGER(), 'sqlite')
 
     db_id = Column(BigInt, primary_key=True)
