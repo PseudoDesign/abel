@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship
 from evelib.objects.CrestSqlInterface import CrestSqlInterface
 from sqlalchemy.dialects import sqlite
 from evelib.objects.Station import Station
-
+from datetime import datetime
 
 class MarketOrder(SqlBase, CrestSqlInterface):
     __tablename__ = "market_order"
@@ -32,6 +32,8 @@ class MarketOrder(SqlBase, CrestSqlInterface):
     type = Column(Integer, ForeignKey('item.id'), nullable=False)
     r_item = relationship("Item")
 
+    capture_time = Column(DateTime, nullable=False)
+
     @classmethod
     def get_objects_from_crest(cls, crest_connection, **kwargs):
         if 'region' not in kwargs:
@@ -44,4 +46,6 @@ class MarketOrder(SqlBase, CrestSqlInterface):
     def new_object_from_crest(cls, crest, **kwargs):
         date = cls.string_to_datetime(getattr(crest, 'issued'))
         setattr(crest, 'issued', date)
-        return super().new_object_from_crest(crest)
+        new_obj = super().new_object_from_crest(crest)
+        new_obj.capture_time = datetime.now()
+        return new_obj
