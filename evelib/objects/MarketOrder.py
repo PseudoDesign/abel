@@ -2,12 +2,15 @@ from sqlalchemy import DateTime, Column, Integer, BigInteger, Boolean, String, F
 from evelib.Sql import SqlBase
 from sqlalchemy.orm import relationship
 from evelib.objects.CrestSqlInterface import CrestSqlInterface
+from sqlalchemy.dialects import sqlite
 
 
 class MarketOrder(SqlBase, CrestSqlInterface):
     __tablename__ = "market_order"
 
-    db_id = Column(Integer, primary_key=True)
+    BigInt = BigInteger().with_variant(sqlite.INTEGER(), 'sqlite')
+
+    db_id = Column(BigInt, primary_key=True)
 
     buy = Column(Boolean, nullable=False)
     issued = Column(DateTime, nullable=False)
