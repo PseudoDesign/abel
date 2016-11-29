@@ -3,6 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from threading import Lock
 
+
 SqlBase = declarative_base()
 SqlSession = sessionmaker()
 

@@ -3,6 +3,7 @@ from evelib.Sql import SqlBase
 from sqlalchemy.orm import relationship
 from evelib.objects.CrestSqlInterface import CrestSqlInterface
 from sqlalchemy.dialects import sqlite
+from evelib.objects.Station import Station
 
 
 class MarketOrder(SqlBase, CrestSqlInterface):
