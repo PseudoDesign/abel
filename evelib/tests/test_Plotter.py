@@ -29,9 +29,13 @@ class TestPlotter(unittest.TestCase):
 
     def test_get_market_day_data_set(self):
         data_set = Plotter.get_market_day_data_sets(self.region, self.item)
-        self.assertIn('volume', data_set)
-        self.assertIn('orderCount', data_set)
-        self.assertIn('lowPrice', data_set)
-        self.assertIn('highPrice', data_set)
+        self.assertGreater(len(data_set.x_data), 0)
         for entry in data_set.x_data:
             self.assertIs(type(entry), datetime)
+        self.assertEqual(data_set['volume'].units, "Units")
+        self.assertEqual(data_set['orderCount'].units, "Units")
+        self.assertEqual(data_set['lowPrice'].units, "ISK")
+        self.assertEqual(data_set['highPrice'].units, "ISK")
+        self.assertEqual(data_set['avgPrice'].units, "ISK")
+        self.assertEqual(data_set.x_data.units, "Time")
+

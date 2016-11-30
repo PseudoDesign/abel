@@ -15,6 +15,7 @@ class MarketDay(SqlBase, CrestSqlInterface):
     orderCount = Column(Integer, nullable=False)
     lowPrice = Column(Float, nullable=False)
     highPrice = Column(Float, nullable=False)
+    avgPrice = Column(Float, nullable=False)
     date = Column(DateTime, nullable=False)
 
     item_id = Column(Integer, ForeignKey('item.id'), nullable=False)
