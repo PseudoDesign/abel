@@ -1,4 +1,4 @@
-import matplotlib
+import matplotlib.pyplot as plt
 from evelib.objects.MarketDay import MarketDay
 
 
@@ -23,18 +23,31 @@ class MarketDayDataSet(dict):
         self['highPrice'] = DataSetEntry("High Price", "ISK")
         self['avgPrice'] = DataSetEntry("Average Price", "ISK")
 
-class Plotter:
+    def add_entry(self, entry):
+        self.x_data += [entry.date]
+        for key in self.keys():
+            self[key] += [getattr(entry, key)]
 
+
+class Plotter:
     def __init__(self):
         self.plot_data = []
 
-    def add_data_set(self, data):
-        pass
+    def add_plot(self, data):
+        self.plot_data += [data]
+
+    def add_data_set(self, plot_data):
+        for entry in plot_data:
+            self.add_plot({'x': plot_data.x_data, 'y': plot_data[entry]})
 
     def render(self, **kwargs):
-        pass
+        for entry in self.plot_data:
+            plt.plot(entry['x'], entry['y'])
+        plt.show()
 
     @staticmethod
-    def get_market_day_data_sets(region, item):
+    def get_market_day_data_set(region, item):
         retval = MarketDayDataSet()
+        for entry in MarketDay.get_all_from_db_by_kwargs(region_id=region.id, item_id=item.id):
+            retval.add_entry(entry)
         return retval

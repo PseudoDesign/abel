@@ -22,13 +22,13 @@ class TestPlotter(unittest.TestCase):
         Scraper.update_market_day_data(cls.region, cls.item)
 
     def test_plot_all_market_day_data(self):
-        plot_data = Plotter.get_market_day_data_sets(self.region, self.item)
+        plot_data = Plotter.get_market_day_data_set(self.region, self.item)
         plot = Plotter()
         plot.add_data_set(plot_data)
         plot.render()
 
     def test_get_market_day_data_set(self):
-        data_set = Plotter.get_market_day_data_sets(self.region, self.item)
+        data_set = Plotter.get_market_day_data_set(self.region, self.item)
         self.assertGreater(len(data_set.x_data), 0)
         for entry in data_set.x_data:
             self.assertIs(type(entry), datetime)

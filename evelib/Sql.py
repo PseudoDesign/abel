@@ -40,8 +40,12 @@ class SqlObjectInterface:
 
     @classmethod
     def get_from_db_by_kwargs(cls, **kwargs):
+        return cls.get_all_from_db_by_kwargs(**kwargs).first()
+
+    @classmethod
+    def get_all_from_db_by_kwargs(cls, **kwargs):
         session = SqlSession()
-        return session.query(cls).filter_by(**kwargs).first()
+        return session.query(cls).filter_by(**kwargs)
 
     @classmethod
     def get_from_db_by_attr(cls, attr, key):

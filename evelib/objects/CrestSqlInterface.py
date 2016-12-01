@@ -72,4 +72,3 @@ class CrestSqlInterface(SqlObjectInterface):
     @classmethod
     def string_to_datetime(cls, my_string):
         return datetime.strptime(my_string, cls.CREST_TIME_FORMAT)
-
