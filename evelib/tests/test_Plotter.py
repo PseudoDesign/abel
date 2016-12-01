@@ -39,3 +39,14 @@ class TestPlotter(unittest.TestCase):
         self.assertEqual(data_set['avgPrice'].units, "ISK")
         self.assertEqual(data_set.x_data.units, "Time")
 
+    def test_get_market_day_data_entries_by_units(self):
+        data_set = Plotter.get_market_day_data_set(self.region, self.item)
+        keys_by_units = data_set.get_entries_by_units()
+        self.assertIn("ISK", keys_by_units)
+        self.assertIn("Units", keys_by_units)
+        self.assertIn("volume", keys_by_units["Units"])
+        self.assertIn("orderCount", keys_by_units["Units"])
+        self.assertIn("lowPrice", keys_by_units["ISK"])
+        self.assertIn("highPrice", keys_by_units["ISK"])
+        self.assertIn("avgPrice", keys_by_units["ISK"])
+

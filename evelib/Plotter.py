@@ -28,6 +28,15 @@ class MarketDayDataSet(dict):
         for key in self.keys():
             self[key] += [getattr(entry, key)]
 
+    def get_entries_by_units(self):
+        retval = {}
+        for entry in self:
+            if self[entry].units in retval:
+                retval[self[entry].units] += [entry]
+            else:
+                retval[self[entry].units] = [entry]
+        return retval
+
 
 class Plotter:
     def __init__(self):
@@ -41,8 +50,7 @@ class Plotter:
             self.add_plot({'x': plot_data.x_data, 'y': plot_data[entry]})
 
     def render(self, **kwargs):
-        for entry in self.plot_data:
-            plt.plot(entry['x'], entry['y'])
+        data = {}
         plt.show()
 
     @staticmethod
