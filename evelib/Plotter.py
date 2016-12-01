@@ -21,11 +21,16 @@ class MarketDayDataSet(dict):
     def __init__(self):
         super().__init__()
         self.x_data = DataSetEntry("Timestamp", "Time")
+        self.region = None
+        self.item = None
         self['volume'] = DataSetEntry("Volume (10M)", "Units", 10000000)
         self['orderCount'] = DataSetEntry("Order Count", "Units")
         self['lowPrice'] = DataSetEntry("Low Price", "ISK")
         self['highPrice'] = DataSetEntry("High Price", "ISK")
         self['avgPrice'] = DataSetEntry("Average Price", "ISK")
+
+    def get_title(self):
+        return self.item.name + " " + self.TITLE + " in " + self.region.name
 
     def add_entry(self, entry):
         self.x_data += [entry.date]
@@ -47,6 +52,8 @@ class MarketDayDataSet(dict):
     @staticmethod
     def get_data_set(region, item):
         retval = MarketDayDataSet()
+        retval.region = region
+        retval.item = item
         for entry in MarketDay.get_all_from_db_by_kwargs(region_id=region.id, item_id=item.id):
             retval.add_entry(entry)
         return retval
@@ -60,16 +67,25 @@ class Plotter:
     def draw_data_set(data_set):
         first = True
         units = data_set.get_entries_by_units()
+        loc = len(units)
         for unit in units:
             if first:
                 first = False
                 fig, x = plt.subplots()
                 ax1 = x
                 ax1.set_xlabel(data_set.x_data.units)
+                linestyle = 'solid'
             else:
                 x = ax1.twinx()
+                linestyle = 'dashed'
+            for_legend = []
             for entry in units[unit]:
-                x.plot(data_set.x_data, data_set[entry])
+                line, = x.plot(data_set.x_data, data_set[entry], label=data_set[entry].name, linestyle=linestyle)
                 x.set_ylabel(data_set[entry].units)
-        plt.title(data_set.TITLE + " by " + data_set.x_data.name)
+                for_legend += [line]
+            plt.legend(handles=for_legend, loc=loc)
+            loc -= 1
+            lim = x.get_ylim()
+            x.set_ylim(lim[0], lim[1]*1.2)
+        plt.title(data_set.get_title())
         plt.show()
