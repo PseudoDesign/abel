@@ -5,6 +5,7 @@ from evelib.objects.Item import Item
 from evelib.objects.Region import Region
 from evelib.Scraper import Scraper
 from evelib.Plotter import Plotter
+from evelib.Plotter import MarketDayDataSet
 from datetime import datetime
 
 
@@ -22,13 +23,11 @@ class TestPlotter(unittest.TestCase):
         Scraper.update_market_day_data(cls.region, cls.item)
 
     def test_plot_all_market_day_data(self):
-        plot_data = Plotter.get_market_day_data_set(self.region, self.item)
-        plot = Plotter()
-        plot.add_data_set(plot_data)
-        plot.render()
+        plot_data = MarketDayDataSet.get_data_set(self.region, self.item)
+        Plotter.draw_data_set(plot_data)
 
     def test_get_market_day_data_set(self):
-        data_set = Plotter.get_market_day_data_set(self.region, self.item)
+        data_set = MarketDayDataSet.get_data_set(self.region, self.item)
         self.assertGreater(len(data_set.x_data), 0)
         for entry in data_set.x_data:
             self.assertIs(type(entry), datetime)
@@ -40,7 +39,7 @@ class TestPlotter(unittest.TestCase):
         self.assertEqual(data_set.x_data.units, "Time")
 
     def test_get_market_day_data_entries_by_units(self):
-        data_set = Plotter.get_market_day_data_set(self.region, self.item)
+        data_set = MarketDayDataSet.get_data_set(self.region, self.item)
         keys_by_units = data_set.get_entries_by_units()
         self.assertIn("ISK", keys_by_units)
         self.assertIn("Units", keys_by_units)
