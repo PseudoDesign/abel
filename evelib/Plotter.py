@@ -74,13 +74,13 @@ class Plotter:
                 fig, x = plt.subplots()
                 ax1 = x
                 ax1.set_xlabel(data_set.x_data.units)
-                linestyle = 'solid'
+                line_style = 'solid'
             else:
                 x = ax1.twinx()
-                linestyle = 'dashed'
+                line_style = 'dashed'
             for_legend = []
             for entry in units[unit]:
-                line, = x.plot(data_set.x_data, data_set[entry], label=data_set[entry].name, linestyle=linestyle)
+                line, = x.plot(data_set.x_data, data_set[entry], label=data_set[entry].name, linestyle=line_style)
                 x.set_ylabel(data_set[entry].units)
                 for_legend += [line]
             plt.legend(handles=for_legend, loc=loc)
