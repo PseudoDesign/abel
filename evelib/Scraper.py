@@ -18,3 +18,4 @@ class Scraper:
         crest_items = MarketOrder.get_objects_from_crest(eve, region=region)
         for item in crest_items:
             MarketOrder.create_from_crest_data(item, write=True)
+
