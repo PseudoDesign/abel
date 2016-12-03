@@ -5,8 +5,7 @@ from evelib.objects.Item import Item
 from evelib.objects.Region import Region
 from evelib.Scraper import Scraper
 from evelib.Plotter import Plotter
-from evelib.Plotter import MarketDayDataSet
-from datetime import datetime
+from evelib.objects.MarketDay import MarketDayDataSet
 
 
 class TestPlotter(unittest.TestCase):
@@ -25,27 +24,3 @@ class TestPlotter(unittest.TestCase):
     def test_plot_all_market_day_data(self):
         plot_data = MarketDayDataSet.get_data_set(self.region, self.item)
         Plotter.draw_data_set(plot_data)
-
-    def test_get_market_day_data_set(self):
-        data_set = MarketDayDataSet.get_data_set(self.region, self.item)
-        self.assertGreater(len(data_set.x_data), 0)
-        for entry in data_set.x_data:
-            self.assertIs(type(entry), datetime)
-        self.assertEqual(data_set['volume'].units, "Units")
-        self.assertEqual(data_set['orderCount'].units, "Units")
-        self.assertEqual(data_set['lowPrice'].units, "ISK")
-        self.assertEqual(data_set['highPrice'].units, "ISK")
-        self.assertEqual(data_set['avgPrice'].units, "ISK")
-        self.assertEqual(data_set.x_data.units, "Time")
-
-    def test_get_market_day_data_entries_by_units(self):
-        data_set = MarketDayDataSet.get_data_set(self.region, self.item)
-        keys_by_units = data_set.get_entries_by_units()
-        self.assertIn("ISK", keys_by_units)
-        self.assertIn("Units", keys_by_units)
-        self.assertIn("volume", keys_by_units["Units"])
-        self.assertIn("orderCount", keys_by_units["Units"])
-        self.assertIn("lowPrice", keys_by_units["ISK"])
-        self.assertIn("highPrice", keys_by_units["ISK"])
-        self.assertIn("avgPrice", keys_by_units["ISK"])
-
