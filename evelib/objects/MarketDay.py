@@ -2,6 +2,7 @@ from sqlalchemy import DateTime, Column, Integer, Float, ForeignKey
 from evelib.Sql import SqlBase
 from sqlalchemy.orm import relationship
 from evelib.objects.CrestSqlInterface import CrestSqlInterface
+from evelib.objects.DataSetInterface import DataSet, DataSetEntry
 
 
 class MarketDay(SqlBase, CrestSqlInterface):
@@ -62,3 +63,31 @@ class MarketDay(SqlBase, CrestSqlInterface):
         item_crest = kwargs['item'].get_crest_item_by_attr(crest_connection, 'id', kwargs['item'].id, dereference=False)
 
         return region_crest().marketHistory(type=item_crest.href)
+
+
+class MarketDayDataSet(DataSet):
+
+    TITLE = "Daily Market Data"
+
+    region = None
+    item = None
+
+    def init_data_set_entries(self):
+        self.x_data = DataSetEntry("Timestamp", "Time")
+        self['volume'] = DataSetEntry("Volume (10M)", "Units", 10000000)
+        self['orderCount'] = DataSetEntry("Order Count", "Units")
+        self['lowPrice'] = DataSetEntry("Low Price", "ISK")
+        self['highPrice'] = DataSetEntry("High Price", "ISK")
+        self['avgPrice'] = DataSetEntry("Average Price", "ISK")
+
+    def get_title(self):
+        return self.item.name + " " + self.TITLE + " in " + self.region.name
+
+    @staticmethod
+    def get_data_set(region, item, **kwargs):
+        retval = MarketDayDataSet()
+        retval.region = region
+        retval.item = item
+        for entry in MarketDay.get_all_from_db_by_kwargs(region_id=region.id, item_id=item.id):
+            retval.add_db_obj(entry)
+        return retval

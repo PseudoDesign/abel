@@ -1,9 +1,11 @@
 from evelib.tests.test_Sql import TestSqlObjectBase
-from evelib.objects.MarketDay import MarketDay
+from evelib.objects.MarketDay import MarketDay, MarketDayDataSet
 from evelib.objects.Item import Item
 from evelib.objects.Region import Region
 from datetime import datetime, timedelta
 from evelib.objects.tests.test_CrestSqlHelper import TestCrestSqlInterface
+from evelib.objects.tests.test_DataSetInterface import TestDataSetInterface
+from evelib.Scraper import Scraper
 
 
 class TestMarketDay(TestSqlObjectBase, TestCrestSqlInterface):
@@ -51,3 +53,37 @@ class TestMarketDay(TestSqlObjectBase, TestCrestSqlInterface):
         db_item = MarketDay.get_db_item_by_crest_item(crest_item, create_if_null=True, write=True, **self.crest_kwargs)
         self.assertEqual(db_item.region_id, self.crest_kwargs['region'].id)
 
+
+class TestMarketDayDataSet(TestDataSetInterface):
+    REGION_NAME = "The Forge"
+    ITEM_NAME = "Tritanium"
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.item = Item.get_from_db_or_crest_by_name(cls.eve, cls.ITEM_NAME)
+        cls.region = Region.get_from_db_or_crest_by_name(cls.eve, cls.REGION_NAME)
+        Scraper.update_market_day_data(cls.region, cls.item)
+
+    def test_get_market_day_data_set(self):
+        data_set = MarketDayDataSet.get_data_set(self.region, self.item)
+        self.assertGreater(len(data_set.x_data), 0)
+        for entry in data_set.x_data:
+            self.assertIs(type(entry), datetime)
+        self.assertEqual(data_set['volume'].units, "Units")
+        self.assertEqual(data_set['orderCount'].units, "Units")
+        self.assertEqual(data_set['lowPrice'].units, "ISK")
+        self.assertEqual(data_set['highPrice'].units, "ISK")
+        self.assertEqual(data_set['avgPrice'].units, "ISK")
+        self.assertEqual(data_set.x_data.units, "Time")
+
+    def test_get_market_day_data_entries_by_units(self):
+        data_set = MarketDayDataSet.get_data_set(self.region, self.item)
+        keys_by_units = data_set.get_entries_by_units()
+        self.assertIn("ISK", keys_by_units)
+        self.assertIn("Units", keys_by_units)
+        self.assertIn("volume", keys_by_units["Units"])
+        self.assertIn("orderCount", keys_by_units["Units"])
+        self.assertIn("lowPrice", keys_by_units["ISK"])
+        self.assertIn("highPrice", keys_by_units["ISK"])
+        self.assertIn("avgPrice", keys_by_units["ISK"])

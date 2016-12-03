@@ -6,6 +6,7 @@ from sqlalchemy.dialects import sqlite
 from evelib.objects.Station import Station
 from datetime import datetime
 
+
 class MarketOrder(SqlBase, CrestSqlInterface):
     __tablename__ = "market_order"
 

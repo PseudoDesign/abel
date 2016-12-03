@@ -35,3 +35,5 @@ class TestMarketOrder(TestSqlObjectBase, TestCrestSqlInterface):
         self.assertFalse(MarketOrder.is_crest_item_in_db(crest_item), "Item is already in database")
         db_item = MarketOrder.get_db_item_by_crest_item(crest_item, create_if_null=True, write=True)
         self.assertEqual(db_item.volume, MarketOrder.get_from_db_by_id(db_item.id).volume)
+
+
