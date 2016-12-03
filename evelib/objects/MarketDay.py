@@ -74,7 +74,7 @@ class MarketDayDataSet(DataSet):
 
     def init_data_set_entries(self):
         self.x_data = DataSetEntry("Timestamp", "Time")
-        self['volume'] = DataSetEntry("Volume (10M)", "Units", 10000000)
+        self['volume'] = DataSetEntry("Volume", "Units")
         self['orderCount'] = DataSetEntry("Order Count", "Units")
         self['lowPrice'] = DataSetEntry("Low Price", "ISK")
         self['highPrice'] = DataSetEntry("High Price", "ISK")
