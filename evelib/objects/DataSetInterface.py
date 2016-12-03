@@ -29,6 +29,8 @@ class DataSet(dict):
         self.x_data += [obj.date]
         for key in self.keys():
             new_value = getattr(obj, key)
+            if self[key]. scale is not None:
+                new_value /= self[key]. scale
             self[key] += [new_value]
 
     def get_entries_by_units(self):
