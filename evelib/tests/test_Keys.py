@@ -1,6 +1,6 @@
 import unittest
 import os
-from evelib.Keys import Keys
+from evelib.Keys import Keys, SqlKey
 
 
 class TestKeys(unittest.TestCase):
@@ -26,4 +26,11 @@ class TestKeys(unittest.TestCase):
         Keys.generate_random_keys(self.KEY_LOCATION)
         with self.assertRaises(FileExistsError):
             Keys.generate_random_keys(self.KEY_LOCATION)
+        keys = Keys(self.KEY_LOCATION)
+        self.assertIs(type(keys.sql_user), str)
+        self.assertEqual(len(keys.sql_user), 30)
 
+    def test_generate_sql_key(self):
+        key = SqlKey.create_random_key()
+        self.assertIs(type(str(key)), str)
+        self.assertEqual(len(str(key)), 30)
