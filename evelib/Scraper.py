@@ -1,6 +1,7 @@
 from evelib.objects.MarketDay import MarketDay
 from evelib.objects.MarketOrder import MarketOrder
 from evelib.Crest import CrestConnection
+from evelib.objects.Item import Item
 
 
 class Scraper:
@@ -18,4 +19,12 @@ class Scraper:
         eve = CrestConnection()
         crest_items = MarketOrder.get_objects_from_crest(eve, region=region)
         for item in crest_items:
-            MarketOrder.create_from_crest_data(sql_session, item, write=True)
+            if Item.get_from_db_by_id(sql_session, item.type) is None:
+                try:
+                    i = Item.get_crest_item_by_attr(eve, 'id', item.type)
+                    Item.create_from_crest_data(sql_session, i, write=True)
+                    i = True
+                except ValueError:
+                    i = False
+            if i:
+                MarketOrder.create_from_crest_data(sql_session, item, write=True)
