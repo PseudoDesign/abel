@@ -39,5 +39,8 @@ fi
 echo "Enter your MariaDB root password: "
 read -s PASSWORD
 mysql -u root -p"${PASSWORD}" -e "CREATE DATABASE IF NOT EXISTS $DB_NAME"
+mysql -u root -p"${PASSWORD}" -e "CREATE USER IF NOT EXISTS 'sql_user'@'localhost' IDENTIFIED BY '${key_sql_user}';"
+mysql -u root -p"${PASSWORD}" -e "GRANT CREATE, INSERT, SELECT ON ${DB_NAME}.* TO 'sql_user'@'localhost' IDENTIFIED BY '${key_sql_user}';"
+
 
 
