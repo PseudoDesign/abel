@@ -22,5 +22,5 @@ apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xcbcb082a1bb943db
 add-apt-repository 'deb [arch=amd64,i386] http://sfo1.mirrors.digitalocean.com/mariadb/repo/10.1/debian jessie main'
 apt-get update
 apt-get install -y mariadb-server
-
-
+# Generate our keys
+python3 ../evelib/Keys.py
