@@ -17,10 +17,11 @@ class TestPlotter(unittest.TestCase):
         cls.eve = CrestConnection()
         cls._connection = SqlConnection()
         cls._connection.create_tables()
-        cls.item = Item.get_from_db_or_crest_by_name(cls.eve, cls.ITEM_NAME)
-        cls.region = Region.get_from_db_or_crest_by_name(cls.eve, cls.REGION_NAME)
-        Scraper.update_market_day_data(cls.region, cls.item)
+        cls._connection.start_connection()
+        cls.item = Item.get_from_db_or_crest_by_name(cls._connection.session, cls.eve, cls.ITEM_NAME)
+        cls.region = Region.get_from_db_or_crest_by_name(cls._connection.session, cls.eve, cls.REGION_NAME)
+        Scraper.update_market_day_data(cls._connection.session, cls.region, cls.item)
 
     def test_plot_all_market_day_data(self):
-        plot_data = MarketDayDataSet.get_data_set(self.region, self.item)
+        plot_data = MarketDayDataSet.get_data_set(self._connection.session, self.region, self.item)
         Plotter.draw_data_set(plot_data)
