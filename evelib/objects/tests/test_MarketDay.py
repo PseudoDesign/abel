@@ -8,15 +8,15 @@ from evelib.objects.tests.test_DataSetInterface import TestDataSetInterface
 from evelib.Scraper import Scraper
 
 
-class TestMarketDay(TestSqlObjectBase, TestCrestSqlInterface):
+class TestMarketDay(TestCrestSqlInterface):
 
     REGION_NAME = "The Forge"
     ITEM_NAME = "Tritanium"
 
     def setUp(self):
         super().setUp()
-        self.item = Item.get_from_db_or_crest_by_name(self.eve, self.ITEM_NAME)
-        self.region = Region.get_from_db_or_crest_by_name(self.eve, self.REGION_NAME)
+        self.item = Item.get_from_db_or_crest_by_name(self._connection.session, self.eve, self.ITEM_NAME)
+        self.region = Region.get_from_db_or_crest_by_name(self._connection.session, self.eve, self.REGION_NAME)
         self.crest_kwargs = {
             "item": self.item,
             "region": self.region,
@@ -25,8 +25,8 @@ class TestMarketDay(TestSqlObjectBase, TestCrestSqlInterface):
     def test_add_new_crest_item(self):
         crest_item = MarketDay.get_crest_item_by_attr(
             self.eve, "date", MarketDay.date_to_string(datetime.now() + timedelta(days=-1)), self.crest_kwargs)
-        db_item = MarketDay.create_from_crest_data(crest_item, **self.crest_kwargs)
-        db_item.write_to_db()
+        db_item = MarketDay.create_from_crest_data(self._connection.session, crest_item, **self.crest_kwargs)
+        db_item.write_to_db(self._connection.session)
         self.compare_db_to_crest(db_item, crest_item)
 
     def test_date_to_string(self):
@@ -35,22 +35,22 @@ class TestMarketDay(TestSqlObjectBase, TestCrestSqlInterface):
     def test_is_crest_object_in_db(self):
         crest_item = MarketDay.get_crest_item_by_attr(
             self.eve, "date", MarketDay.date_to_string(datetime.now() + timedelta(days=-1)), self.crest_kwargs)
-        self.assertFalse(MarketDay.is_crest_item_in_db(crest_item, **self.crest_kwargs), "Item is already in database")
-        MarketDay.create_from_crest_data(crest_item, write=True, **self.crest_kwargs)
-        self.assertTrue(MarketDay.is_crest_item_in_db(crest_item, **self.crest_kwargs), "Item is not in database")
+        self.assertFalse(MarketDay.is_crest_item_in_db(self._connection.session, crest_item, **self.crest_kwargs), "Item is already in database")
+        MarketDay.create_from_crest_data(self._connection.session, crest_item, write=True, **self.crest_kwargs)
+        self.assertTrue(MarketDay.is_crest_item_in_db(self._connection.session, crest_item, **self.crest_kwargs), "Item is not in database")
 
     def test_get_entry_or_add_from_crest(self):
         crest_item = MarketDay.get_crest_item_by_attr(
             self.eve, "date", MarketDay.date_to_string(datetime.now() + timedelta(days=-1)), self.crest_kwargs)
-        self.assertFalse(MarketDay.is_crest_item_in_db(crest_item, **self.crest_kwargs), "Item is already in database")
-        db_item = MarketDay.get_db_item_by_crest_item(crest_item, create_if_null=True, write=True, **self.crest_kwargs)
-        self.assertEqual(db_item.volume, MarketDay.get_from_db_by_id(db_item.id).volume)
+        self.assertFalse(MarketDay.is_crest_item_in_db(self._connection.session, crest_item, **self.crest_kwargs), "Item is already in database")
+        db_item = MarketDay.get_db_item_by_crest_item(self._connection.session, crest_item, create_if_null=True, write=True, **self.crest_kwargs)
+        self.assertEqual(db_item.volume, MarketDay.get_from_db_by_id(self._connection.session, db_item.id).volume)
 
     def test_get_db_item_by_name(self):
         crest_item = MarketDay.get_crest_item_by_attr(
             self.eve, "date", MarketDay.date_to_string(datetime.now() + timedelta(days=-1)), self.crest_kwargs)
-        MarketDay.get_db_item_by_crest_item(crest_item, create_if_null=True, write=True, **self.crest_kwargs)
-        db_item = MarketDay.get_db_item_by_crest_item(crest_item, create_if_null=True, write=True, **self.crest_kwargs)
+        MarketDay.get_db_item_by_crest_item(self._connection.session, crest_item, create_if_null=True, write=True, **self.crest_kwargs)
+        db_item = MarketDay.get_db_item_by_crest_item(self._connection.session, crest_item, create_if_null=True, write=True, **self.crest_kwargs)
         self.assertEqual(db_item.region_id, self.crest_kwargs['region'].id)
 
 
@@ -61,12 +61,18 @@ class TestMarketDayDataSet(TestDataSetInterface):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.item = Item.get_from_db_or_crest_by_name(cls.eve, cls.ITEM_NAME)
-        cls.region = Region.get_from_db_or_crest_by_name(cls.eve, cls.REGION_NAME)
-        Scraper.update_market_day_data(cls.region, cls.item)
+        cls._connection.start_connection()
+        item = Item.get_from_db_or_crest_by_name(cls._connection.session, cls.eve, cls.ITEM_NAME)
+        region = Region.get_from_db_or_crest_by_name(cls._connection.session, cls.eve, cls.REGION_NAME)
+        Scraper.update_market_day_data(cls._connection.session, region, item)
+
+    def setUp(self):
+        super().__init__()
+        self.item = Item.get_from_db_or_crest_by_name(self._connection.session, self.eve, self.ITEM_NAME)
+        self.region = Region.get_from_db_or_crest_by_name(self._connection.session, self.eve, self.REGION_NAME)
 
     def test_get_market_day_data_set(self):
-        data_set = MarketDayDataSet.get_data_set(self.region, self.item)
+        data_set = MarketDayDataSet.get_data_set(self._connection.session, self.region, self.item)
         self.assertGreater(len(data_set.x_data), 0)
         for entry in data_set.x_data:
             self.assertIs(type(entry), datetime)
@@ -78,7 +84,7 @@ class TestMarketDayDataSet(TestDataSetInterface):
         self.assertEqual(data_set.x_data.units, "Time")
 
     def test_get_market_day_data_entries_by_units(self):
-        data_set = MarketDayDataSet.get_data_set(self.region, self.item)
+        data_set = MarketDayDataSet.get_data_set(self._connection.session, self.region, self.item)
         keys_by_units = data_set.get_entries_by_units()
         self.assertIn("ISK", keys_by_units)
         self.assertIn("Units", keys_by_units)

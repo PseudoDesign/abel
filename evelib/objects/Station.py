@@ -15,12 +15,12 @@ class Station(SqlBase, SqlObjectInterface):
     r_solar_system = relationship("SolarSystem")
 
     @classmethod
-    def create_new_object(cls, crest_connection, id, name, solar_system_id, **kwargs):
+    def create_new_object(cls, sql_session, crest_connection, id, name, solar_system_id, **kwargs):
         new_obj = cls(id=id, name=name)
-        new_obj.solar_system_id = SolarSystem.get_from_db_or_crest_by_id(crest_connection, solar_system_id).id
+        new_obj.solar_system_id = SolarSystem.get_from_db_or_crest_by_id(sql_session, crest_connection, solar_system_id).id
         if 'write' in kwargs:
             if kwargs['write']:
-                new_obj.write_to_db()
+                new_obj.write_to_db(sql_session)
         return new_obj
 
     @classmethod

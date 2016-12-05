@@ -16,6 +16,6 @@ class TestStation(TestSqlObjectBase):
 
     def test_create_station(self):
         name = 'Jita IV - Moon 10 - Caldari Constructions Production Plant'
-        new_obj = Station.create_new_object(self.eve, 60002959, name, 30000142, write=True)
+        new_obj = Station.create_new_object(self._connection.session, self.eve, 60002959, name, 30000142, write=True)
         self.assertEqual(name, new_obj.name)
         self.assertEqual(new_obj.r_solar_system.name, "Jita")
