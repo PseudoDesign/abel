@@ -20,7 +20,7 @@ apt-get update
 apt-get install -y python3-pip
 pip3 install git+git://github.com/pycrest/PyCrest.git
 #pip3 install matplotlib
-pip3 install sqlalchemy pyaml
+pip3 install sqlalchemy pyaml pymysql
 
 # Install MariaDB (debian jessie)
 apt-get install -y software-properties-common
