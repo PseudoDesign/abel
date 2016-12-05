@@ -53,3 +53,9 @@ class Keys:
         file = open(key_location, 'w')
         yaml.dump(keys.dict, file)
         file.close()
+
+if __name__ == "__main__":
+    try:
+        Keys.generate_random_keys()
+    except FileExistsError:
+        pass
