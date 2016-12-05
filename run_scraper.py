@@ -3,6 +3,7 @@ from evelib.objects.Item import Item
 from evelib.objects.Region import Region
 from evelib.Crest import CrestConnection
 from evelib.Sql import SqlConnection
+from evelib.Keys import Keys
 import time
 import threading
 
@@ -13,6 +14,10 @@ ITEM_NAMES = [
     "Tritanium",
     ]
 
+keys = Keys()
+CONNECTION_STRING = "mysql://sql_user:" + keys.sql_user + "@localhost/evedb"
+keys = None
+print(CONNECTION_STRING)
 
 def get_regions(crest_connection):
     regions = []
@@ -33,7 +38,7 @@ minute_count = 60
 
 
 def once_per_minute():
-    _sql_connection = SqlConnection()
+    _sql_connection = SqlConnection(CONNECTION_STRING)
     _sql_connection.create_tables()
     crest_connection = CrestConnection()
     regions = get_regions(crest_connection)
@@ -43,7 +48,7 @@ def once_per_minute():
 
 
 def once_per_hour():
-    _sql_connection = SqlConnection()
+    _sql_connection = SqlConnection(CONNECTION_STRING)
     _sql_connection.create_tables()
     crest_connection = CrestConnection()
     regions = get_regions(crest_connection)
@@ -69,7 +74,7 @@ def scheduler():
 
 def init_regions_and_items():
     crest_connection = CrestConnection()
-    sql_connection = SqlConnection()
+    sql_connection = SqlConnection(CONNECTION_STRING)
     sql_connection.create_tables()
     get_regions(crest_connection)
     get_items(crest_connection)
@@ -77,3 +82,4 @@ def init_regions_and_items():
 
 init_regions_and_items()
 scheduler()
+
