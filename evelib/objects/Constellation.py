@@ -9,7 +9,7 @@ class Constellation(SqlBase, CrestSqlInterface):
     __tablename__ = "constellation"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(128))
+    name = Column(String)
 
     r_solar_systems = relationship("SolarSystem")
 

@@ -8,8 +8,8 @@ class Region(SqlBase, CrestSqlInterface):
     __tablename__ = "region"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(128), nullable=False)
-    description = Column(String(512))
+    name = Column(String, nullable=False)
+    description = Column(String)
     r_constellations = relationship("Constellation")
 
     @classmethod
