@@ -7,7 +7,7 @@ class Item(SqlBase, CrestSqlInterface):
     __tablename__ = "item"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False)
+    name = Column(String(128), nullable=False)
     published = Column(Boolean, nullable=False)
     mass = Column(Float, nullable=False)
 
