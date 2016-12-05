@@ -15,7 +15,7 @@ ITEM_NAMES = [
     ]
 
 keys = Keys()
-CONNECTION_STRING = "mysql://sql_user:" + keys.sql_user + "@localhost/evedb"
+CONNECTION_STRING = "mysql+pymysql://sql_user:" + keys.sql_user + "@localhost/evedb"
 keys = None
 print(CONNECTION_STRING)
 
