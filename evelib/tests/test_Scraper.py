@@ -35,4 +35,5 @@ class TestScraper(unittest.TestCase):
         Scraper.update_market_order_data(self._connection.session, self.region)
         crest_items = MarketOrder.get_objects_from_crest(self.eve, region=self.region)
         for item in crest_items:
-            self.assertTrue(MarketOrder.is_crest_item_in_db(self._connection.session, item))
+            if Item.get_from_db_by_id(self._connection.session, item.type) is not None:
+                self.assertTrue(MarketOrder.is_crest_item_in_db(self._connection.session, item))
