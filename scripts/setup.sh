@@ -2,6 +2,8 @@
 
 set -e
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 if [[ $EUID -ne 0 ]]; then
     echo "This script must be run as root" 
     exit 1
@@ -23,4 +25,4 @@ add-apt-repository 'deb [arch=amd64,i386] http://sfo1.mirrors.digitalocean.com/m
 apt-get update
 apt-get install -y mariadb-server
 # Generate our keys
-python3 ../evelib/Keys.py
+python3 ${DIR}/../evelib/Keys.py
