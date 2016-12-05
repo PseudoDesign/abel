@@ -24,7 +24,7 @@ class SqlKey:
 
 class Keys:
 
-    LOCATION = os.path.dirname(os.path.dirname(__file__) + "/../.keys.yaml")
+    LOCATION = os.path.dirname(os.path.dirname(__file__)) + "/../.keys.yaml"
 
     KEYS_TRACKED = {
         'sql_user': SqlKey()
