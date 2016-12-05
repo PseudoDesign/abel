@@ -9,6 +9,9 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
+# Include the "parse_yaml" function
+. ${DIR}/parse_yaml.sh
+
 apt-get update
 
 # Install python packages
@@ -26,3 +29,5 @@ apt-get update
 apt-get install -y mariadb-server
 # Generate our keys
 python3 ${DIR}/../evelib/Keys.py
+
+
