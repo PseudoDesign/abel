@@ -51,7 +51,7 @@ class Keys:
         for key in keys.dict:
             keys.dict[key] = str(keys.dict[key].create_random_key())
         file = open(key_location, 'w')
-        yaml.dump(keys.dict, file)
+        yaml.dump(keys.dict, file, default_flow_style=False)
         file.close()
 
 if __name__ == "__main__":
