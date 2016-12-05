@@ -3,6 +3,7 @@
 set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DB_NAME='evedb'
 
 if [[ $EUID -ne 0 ]]; then
     echo "This script must be run as root" 
@@ -27,7 +28,16 @@ apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xcbcb082a1bb943db
 add-apt-repository 'deb [arch=amd64,i386] http://sfo1.mirrors.digitalocean.com/mariadb/repo/10.1/debian jessie main'
 apt-get update
 apt-get install -y mariadb-server
-# Generate our keys
+# Generate/get our keys
 python3 ${DIR}/../evelib/Keys.py
+eval $(parse_yaml ${DIR}/../.keys.yaml "key_")
+if [ -z "$key_sql_user" ]; then
+    echo "Error: unable to get sql_user key"
+    exit 1
+fi
+# Initalize our db
+echo "Enter your MariaDB root password: "
+read -s PASSWORD
+mysql -u root -p"${PASSWORD}" -e "CREATE DATABASE IF NOT EXISTS $DB_NAME"
 
 
