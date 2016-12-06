@@ -1,6 +1,7 @@
 from evelib.objects.Station import Station
 from evelib.Crest import CrestConnection
 from evelib.Sql import SqlConnection
+from evelib.Keys import Keys
 import yaml
 import sys
 
@@ -17,4 +18,7 @@ def get_stations_from_yaml(file_name, db_location="sqlite:///:memory:"):
 
 
 if __name__ == "__main__":
-    get_stations_from_yaml(sys.argv[1], sys.argv[2])
+    keys = Keys()
+    conn = "mysql+pymysql://sql_user:" + keys.sql_user + "@localhost/evedb"
+    get_stations_from_yaml(sys.argv[1], conn)
+
