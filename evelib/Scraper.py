@@ -19,6 +19,7 @@ class Scraper:
         eve = CrestConnection()
         crest_items = MarketOrder.get_objects_from_crest(eve, region=region)
         for item in crest_items:
+            i = True
             if Item.get_from_db_by_id(sql_session, item.type) is None:
                 try:
                     i = Item.get_crest_item_by_attr(eve, 'id', item.type)

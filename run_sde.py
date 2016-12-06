@@ -14,7 +14,8 @@ def get_stations_from_yaml(file_name, db_location="sqlite:///:memory:"):
     with open(file_name) as file:
         data = yaml.load(file)
     for entry in data:
-        Station.new_object_from_dict(sql_connection.session, eve, entry, write=True)
+        if Station.get_from_db_by_id(sql_connection.session, entry['stationID']) is None:
+            Station.new_object_from_dict(sql_connection.session, eve, entry, write=True)
 
 
 if __name__ == "__main__":

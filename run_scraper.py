@@ -64,13 +64,13 @@ def once_per_hour():
 def scheduler():
     global next_call
     global minute_count
-    next_call += 60
+    next_call += 60 * 15
     once_per_minute()
     if minute_count >= 60:
         once_per_hour()
         minute_count = 0
     else:
-        minute_count += 1
+        minute_count += 15
     threading.Timer(next_call - time.time(), scheduler).start()
 
 
