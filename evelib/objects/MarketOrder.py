@@ -22,7 +22,7 @@ class MarketOrder(SqlBase, CrestSqlInterface):
     duration = Column(Integer, nullable=False)
     minVolume = Column(Integer, nullable=False)
     volumeEntered = Column(Integer, nullable=False)
-    range = Column(String(30), nullable=False)
+    range = Column(String(30, convert_unicode='force', unicode_error='backslashreplace'), nullable=False)
 
     id = Column(BigInteger, nullable=False)
 

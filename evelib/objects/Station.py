@@ -9,7 +9,7 @@ class Station(SqlBase, SqlObjectInterface):
     __tablename__ = "station"
 
     id = Column(BigInteger, primary_key=True)
-    name = Column(String(128), nullable=False)
+    name = Column(String(128, convert_unicode='force', unicode_error='backslashreplace'), nullable=False)
 
     solar_system_id = Column(Integer, ForeignKey('solar_system.id'), nullable=False)
     r_solar_system = relationship("SolarSystem")

@@ -51,4 +51,3 @@ class Constellation(SqlBase, CrestSqlInterface):
         for c in constellations:
             retval += [cls.get_db_item_by_crest_item(sql_session, c, create_if_null=True, write=False)]
         return retval
-
