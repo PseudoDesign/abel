@@ -43,3 +43,12 @@ class Constellation(SqlBase, CrestSqlInterface):
                 if kwargs['create_if_null']:
                     retval = cls.create_from_crest_data(sql_session, crest_item, **kwargs)
         return retval
+
+    @classmethod
+    def get_and_create_all_in_region(cls, sql_session, region, **kwargs):
+        constellations = region.constellations
+        retval = []
+        for c in constellations:
+            retval += [cls.get_db_item_by_crest_item(sql_session, c, create_if_null=True, write=False)]
+        return retval
+

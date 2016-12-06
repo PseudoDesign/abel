@@ -47,6 +47,6 @@ class MarketOrder(SqlBase, CrestSqlInterface):
     def new_object_from_crest(cls, crest, **kwargs):
         date = cls.string_to_datetime(getattr(crest, 'issued'))
         setattr(crest, 'issued', date)
-        new_obj = super().new_object_from_crest(crest)
+        new_obj = super().new_object_from_crest(crest, **kwargs)
         new_obj.capture_time = datetime.now()
         return new_obj
