@@ -35,12 +35,17 @@ if [ -z "$key_sql_user" ]; then
     echo "Error: unable to get sql_user key"
     exit 1
 fi
+if [ -z "$key_sql_remote_user" ]; then
+    echo "Error: unable to get the sql_remote_user key"
+    exit 1
+fi
 # Initalize our db
 echo "Enter your MariaDB root password: "
 read -s PASSWORD
 mysql -u root -p"${PASSWORD}" -e "CREATE DATABASE IF NOT EXISTS $DB_NAME"
 mysql -u root -p"${PASSWORD}" -e "CREATE USER IF NOT EXISTS 'sql_user'@'localhost' IDENTIFIED BY '${key_sql_user}';"
 mysql -u root -p"${PASSWORD}" -e "GRANT CREATE, INSERT, SELECT ON ${DB_NAME}.* TO 'sql_user'@'localhost' IDENTIFIED BY '${key_sql_user}';"
-
+ql -u root -p"${PASSWORD}" -e "CREATE USER IF NOT EXISTS 'sql_remote_user'@'localhost' IDENTIFIED BY '${key_sql_remote_user}';"
+mysql -u root -p"${PASSWORD}" -e "GRANT SELECT ON ${DB_NAME}.* TO 'sql_user'@'%' IDENTIFIED BY '${key_sql_remote_user}';"
 
 
