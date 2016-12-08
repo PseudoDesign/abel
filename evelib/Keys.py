@@ -2,6 +2,7 @@ import os
 import yaml
 import random
 import string
+import copy
 
 class SqlKey:
 
@@ -34,11 +35,14 @@ class Keys:
     def __getattr__(self, item):
         return self.dict[item]
 
+    def __len__(self):
+        return len(self.dict)
+
     def __init__(self, key_location=LOCATION):
         # Set key_location to None for a blank dict
         super().__init__()
         if key_location is None:
-            self.dict = self.KEYS_TRACKED
+            self.dict = copy.copy(self.KEYS_TRACKED)
         else:
             file = open(key_location, 'r')
             self.dict = yaml.load(file)
@@ -46,11 +50,15 @@ class Keys:
 
     @classmethod
     def generate_random_keys(cls, key_location=LOCATION):
+        existing_values = {}
         if os.path.exists(key_location):
-            raise FileExistsError()
+            existing_values = Keys(key_location).dict
         keys = cls(None)
         for key in keys.dict:
-            keys.dict[key] = str(keys.dict[key].create_random_key())
+            if key not in existing_values:
+                keys.dict[key] = str(keys.dict[key].create_random_key())
+            else:
+                keys.dict[key] = existing_values[key]
         file = open(key_location, 'w')
         yaml.dump(keys.dict, file, default_flow_style=False)
         file.close()

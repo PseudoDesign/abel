@@ -24,8 +24,6 @@ class TestKeys(unittest.TestCase):
         with self.assertRaises(FileNotFoundError):
             Keys(self.KEY_LOCATION)
         Keys.generate_random_keys(self.KEY_LOCATION)
-        with self.assertRaises(FileExistsError):
-            Keys.generate_random_keys(self.KEY_LOCATION)
         keys = Keys(self.KEY_LOCATION)
         self.assertIs(type(keys.sql_user), str)
         self.assertEqual(len(keys.sql_user), 30)
@@ -36,3 +34,16 @@ class TestKeys(unittest.TestCase):
         key = SqlKey.create_random_key()
         self.assertIs(type(str(key)), str)
         self.assertEqual(len(str(key)), 30)
+
+    def test_generate_added_keys(self):
+        track = Keys.KEYS_TRACKED
+        Keys.KEYS_TRACKED = {'sql_user': SqlKey()}
+        Keys.generate_random_keys(self.KEY_LOCATION)
+        Keys.KEYS_TRACKED = track
+        keys = Keys(self.KEY_LOCATION)
+        self.assertEqual(len(keys), 1)
+        Keys.generate_random_keys(self.KEY_LOCATION)
+        new_keys = Keys(self.KEY_LOCATION)
+        self.assertEqual(len(track), len(new_keys))
+        self.assertEqual(keys.sql_user, new_keys.sql_user)
+
