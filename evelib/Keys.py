@@ -4,6 +4,7 @@ import random
 import string
 import copy
 
+
 class SqlKey:
 
     PASSKEY_LEN = 30
