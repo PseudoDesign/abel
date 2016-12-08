@@ -27,7 +27,8 @@ class Keys:
     LOCATION = os.path.dirname(os.path.abspath(__file__)) + "/../.keys.yaml"
 
     KEYS_TRACKED = {
-        'sql_user': SqlKey()
+        'sql_user': SqlKey(),
+        'sql_remote_user': SqlKey(),
     }
 
     def __getattr__(self, item):

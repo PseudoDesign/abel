@@ -29,6 +29,8 @@ class TestKeys(unittest.TestCase):
         keys = Keys(self.KEY_LOCATION)
         self.assertIs(type(keys.sql_user), str)
         self.assertEqual(len(keys.sql_user), 30)
+        self.assertIs(type(keys.sql_remote_user), str)
+        self.assertEqual(len(keys.sql_remote_user), 30)
 
     def test_generate_sql_key(self):
         key = SqlKey.create_random_key()

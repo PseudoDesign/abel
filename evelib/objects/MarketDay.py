@@ -26,20 +26,21 @@ class MarketDay(SqlBase, CrestSqlInterface):
     r_region = relationship("Region")
 
     @classmethod
-    def crest_db_query(cls, crest_item, **kwargs):
+    def crest_db_query(cls, sql_session, crest_item, **kwargs):
         if 'region' not in kwargs or 'item' not in kwargs:
             raise AttributeError()
         date = getattr(crest_item, 'date')
         if type(date) is str:
             date = cls.string_to_datetime(date)
         return cls.get_from_db_by_kwargs(
+                sql_session,
                 item_id=kwargs['item'].id,
                 region_id=kwargs['region'].id,
                 date=date)
 
     @classmethod
-    def is_crest_item_in_db(cls, crest_item, **kwargs):
-        if cls.crest_db_query(crest_item, **kwargs) is not None:
+    def is_crest_item_in_db(cls, sql_session, crest_item, **kwargs):
+        if cls.crest_db_query(sql_session, crest_item, **kwargs) is not None:
             return True
         return False
 
@@ -84,10 +85,10 @@ class MarketDayDataSet(DataSet):
         return self.item.name + " " + self.TITLE + " in " + self.region.name
 
     @staticmethod
-    def get_data_set(region, item, **kwargs):
+    def get_data_set(sql_session, region, item, **kwargs):
         retval = MarketDayDataSet()
         retval.region = region
         retval.item = item
-        for entry in MarketDay.get_all_from_db_by_kwargs(region_id=region.id, item_id=item.id):
+        for entry in MarketDay.get_all_from_db_by_kwargs(sql_session, region_id=region.id, item_id=item.id):
             retval.add_db_obj(entry)
         return retval

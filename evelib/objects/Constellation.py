@@ -9,7 +9,7 @@ class Constellation(SqlBase, CrestSqlInterface):
     __tablename__ = "constellation"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String)
+    name = Column(String(128))
 
     r_solar_systems = relationship("SolarSystem")
 
@@ -17,13 +17,13 @@ class Constellation(SqlBase, CrestSqlInterface):
     r_region = relationship("Region", back_populates="r_constellations")
 
     @classmethod
-    def create_from_crest_data(cls, crest_item, **kwargs):
+    def create_from_crest_data(cls, sql_session, crest_item, **kwargs):
         new_obj = cls.new_object_from_crest(crest_item)
-        new_obj.region_id = Region.get_db_item_by_crest_item(
+        new_obj.region_id = Region.get_db_item_by_crest_item(sql_session,
             getattr(crest_item(), 'region')(), create_if_null=True, write=True).id
         if 'write' in kwargs:
             if kwargs['write']:
-                new_obj.write_to_db()
+                new_obj.write_to_db(sql_session)
         return new_obj
 
     @classmethod
@@ -36,10 +36,18 @@ class Constellation(SqlBase, CrestSqlInterface):
         return crest_item
 
     @classmethod
-    def get_db_item_by_crest_item(cls, crest_item, **kwargs):
-        retval = cls.get_from_db_by_id(crest_item.id)
+    def get_db_item_by_crest_item(cls, sql_session, crest_item, **kwargs):
+        retval = cls.get_from_db_by_id(sql_session, crest_item.id)
         if retval is None:
             if 'create_if_null' in kwargs:
                 if kwargs['create_if_null']:
-                    retval = cls.create_from_crest_data(crest_item, **kwargs)
+                    retval = cls.create_from_crest_data(sql_session, crest_item, **kwargs)
+        return retval
+
+    @classmethod
+    def get_and_create_all_in_region(cls, sql_session, region, **kwargs):
+        constellations = region.constellations
+        retval = []
+        for c in constellations:
+            retval += [cls.get_db_item_by_crest_item(sql_session, c, create_if_null=True, write=False)]
         return retval

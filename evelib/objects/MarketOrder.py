@@ -22,7 +22,7 @@ class MarketOrder(SqlBase, CrestSqlInterface):
     duration = Column(Integer, nullable=False)
     minVolume = Column(Integer, nullable=False)
     volumeEntered = Column(Integer, nullable=False)
-    range = Column(String, nullable=False)
+    range = Column(String(30, convert_unicode='force', unicode_error='backslashreplace'), nullable=False)
 
     id = Column(BigInteger, nullable=False)
 
@@ -47,6 +47,6 @@ class MarketOrder(SqlBase, CrestSqlInterface):
     def new_object_from_crest(cls, crest, **kwargs):
         date = cls.string_to_datetime(getattr(crest, 'issued'))
         setattr(crest, 'issued', date)
-        new_obj = super().new_object_from_crest(crest)
+        new_obj = super().new_object_from_crest(crest, **kwargs)
         new_obj.capture_time = datetime.now()
         return new_obj

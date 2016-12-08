@@ -9,7 +9,7 @@ class SolarSystem(SqlBase, CrestSqlInterface):
     __tablename__ = "solar_system"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False)
+    name = Column(String(128, convert_unicode='force', unicode_error='backslashreplace'), nullable=False)
 
     constellation_id = Column(Integer, ForeignKey('constellation.id'), nullable=False)
     r_constellation = relationship("Constellation")
@@ -21,11 +21,11 @@ class SolarSystem(SqlBase, CrestSqlInterface):
         return crest_connection.systems
 
     @classmethod
-    def create_from_crest_data(cls, crest_item, **kwargs):
+    def create_from_crest_data(cls, sql_session, crest_item, **kwargs):
         new_obj = cls.new_object_from_crest(crest_item)
-        new_obj.constellation_id = Constellation.get_db_item_by_crest_item(
+        new_obj.constellation_id = Constellation.get_db_item_by_crest_item(sql_session,
             getattr(crest_item(), 'constellation'), create_if_null=True, write=True).id
         if 'write' in kwargs:
             if kwargs['write']:
-                new_obj.write_to_db()
+                new_obj.write_to_db(sql_session)
         return new_obj

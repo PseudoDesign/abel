@@ -9,12 +9,16 @@ SqlSession = sessionmaker()
 
 
 class SqlConnection:
-    def __init__(self,db='sqlite:///:memory:',echo=False):
+    def __init__(self, db='sqlite:///:memory:', echo=False):
         self.__db = db
         self.__echo = echo
         self.__engine = None
         self.__engine_lock = Lock()
+        self.session = None
         self.reset_engine()
+
+    def __del__(self):
+        self.close_connection()
 
     def reset_engine(self):
         # Can be used to reset an sqlite database in memory.  Useful for testing
@@ -22,6 +26,19 @@ class SqlConnection:
             self.__engine = create_engine(self.__db, echo=self.__echo)
             SqlBase.metadata.bind = self.__engine
             SqlSession.configure(bind=self.__engine)
+
+    def start_connection(self):
+        with self.__engine_lock:
+            if self.session is None:
+                self.session = SqlSession()
+            else:
+                raise ValueError("Connection is already open")
+
+    def close_connection(self):
+        with self.__engine_lock:
+            if self.session is not None:
+                self.session.close()
+                self.session = None
 
     def create_tables(self):
         with self.__engine_lock:
@@ -33,27 +50,25 @@ class SqlConnection:
 
 
 class SqlObjectInterface:
-    def write_to_db(self):
-        session = SqlSession()
-        session.add(self)
-        session.commit()
+    def write_to_db(self, sql_session):
+        sql_session.add(self)
+        sql_session.commit()
 
     @classmethod
-    def get_from_db_by_kwargs(cls, **kwargs):
-        return cls.get_all_from_db_by_kwargs(**kwargs).first()
+    def get_from_db_by_kwargs(cls, sql_session, **kwargs):
+        return cls.get_all_from_db_by_kwargs(sql_session, **kwargs).first()
 
     @classmethod
-    def get_all_from_db_by_kwargs(cls, **kwargs):
-        session = SqlSession()
-        return session.query(cls).filter_by(**kwargs)
+    def get_all_from_db_by_kwargs(cls, sql_session, **kwargs):
+        return sql_session.query(cls).filter_by(**kwargs)
 
     @classmethod
-    def get_from_db_by_attr(cls, attr, key):
-        return cls.get_from_db_by_kwargs(**{attr: key})
+    def get_from_db_by_attr(cls, sql_session, attr, key):
+        return cls.get_from_db_by_kwargs(sql_session, **{attr: key})
 
     @classmethod
-    def get_from_db_by_id(cls, my_id):
-        return cls.get_from_db_by_attr('id', my_id)
+    def get_from_db_by_id(cls, sql_session, my_id):
+        return cls.get_from_db_by_attr(sql_session, 'id', my_id)
 
     @classmethod
     def new_object_from_crest(cls, crest, **kwargs):
