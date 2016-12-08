@@ -65,9 +65,15 @@ def scheduler():
     global next_call
     global minute_count
     next_call += 60 * 15
-    once_per_minute()
+    try:
+        once_per_minute()
+    except ConnectionError:
+        print("Connection error, trying again later")
     if minute_count >= 60:
-        once_per_hour()
+        try:
+            once_per_hour()
+        except ConnectionError:
+            print("Connection error, trying again later")
         minute_count = 0
     else:
         minute_count += 15
